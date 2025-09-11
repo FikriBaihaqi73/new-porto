@@ -6,6 +6,19 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   srcDir: "src/",
   css: ["~/assets/css/main.css"],
+  app: {
+    head: {
+      link: [
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700&family=Roboto+Mono:wght@400&display=swap',
+        },
+      ],
+    },
+  },
+  plugins: [
+    '~/plugins/gsap.client.js',
+  ],
   vite: {
     plugins: [
       tailwindcss(),
