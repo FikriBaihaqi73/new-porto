@@ -6,11 +6,7 @@
         <h2 class="text-5xl md:text-6xl font-extrabold text-blue-400 font-outfit mb-4">[ FEATURED PROJECTS ]</h2>
         <p class="text-xl text-blue-300 font-inter mb-2">Pilihan Proyek Unggulan - Status: AKTIF</p>
         <div class="flex items-center justify-center gap-4 text-sm text-gray-400 font-mono">
-          <span>Menampilkan {{ projects.length }} dari {{ totalProjectsCount }} proyek</span>
           <span class="w-1 h-1 bg-blue-400 rounded-full"></span>
-          <NuxtLink to="/projects" class="text-blue-400 hover:text-blue-300 transition-colors underline">
-            Lihat Semua Proyek →
-          </NuxtLink>
         </div>
       </div>
 

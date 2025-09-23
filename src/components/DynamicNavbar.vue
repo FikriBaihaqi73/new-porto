@@ -43,34 +43,34 @@
         <!-- Navigation Items -->
         <ul class="nav-items">
           <li class="nav-item">
-            <NuxtLink to="/#hero-section" @click="navigateAndClose" class="nav-link">
+            <a href="/#hero-section" @click="navigateAndClose($event, false)" class="nav-link">
               <span class="nav-text">Home</span>
               <div class="nav-effect"></div>
-            </NuxtLink>
+            </a>
           </li>
           <li class="nav-item">
-            <NuxtLink to="/#about-section" @click="navigateAndClose" class="nav-link">
+            <a href="/#about-section" @click="navigateAndClose($event, false)" class="nav-link">
               <span class="nav-text">About</span>
               <div class="nav-effect"></div>
-            </NuxtLink>
+            </a>
           </li>
           <li class="nav-item">
-            <NuxtLink to="/#projects-section" @click="navigateAndClose" class="nav-link">
+            <a href="/#projects-section" @click="navigateAndClose($event, false)" class="nav-link">
               <span class="nav-text">Projects</span>
               <div class="nav-effect"></div>
-            </NuxtLink>
+            </a>
           </li>
           <li class="nav-item">
-            <NuxtLink to="/projects" @click="navigateAndClose" class="nav-link">
+            <NuxtLink to="/projects" @click="navigateAndClose($event, true)" class="nav-link">
               <span class="nav-text">All Projects</span>
               <div class="nav-effect"></div>
             </NuxtLink>
           </li>
           <li class="nav-item">
-            <NuxtLink to="/#footer-section" @click="navigateAndClose" class="nav-link">
+            <a href="/#footer-section" @click="navigateAndClose($event, false)" class="nav-link">
               <span class="nav-text">Contact</span>
               <div class="nav-effect"></div>
-            </NuxtLink>
+            </a>
           </li>
         </ul>
 
@@ -87,7 +87,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import gsap from 'gsap'
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
+
+// Register GSAP plugins
+gsap.registerPlugin(ScrollToPlugin)
 
 const isExpanded = ref(false)
 
@@ -107,11 +112,141 @@ const closeNavbar = () => {
   document.body.style.overflow = ''
 }
 
-const navigateAndClose = (event) => {
-  // Small delay to allow smooth closing animation
+const navigateAndClose = async (event, isPageChange = false) => {
+  const currentRoute = useRoute()
+  const router = useRouter()
+  
+  if (isPageChange) {
+    // Teleportation effect for page changes
+    createTeleportationEffect()
+    setTimeout(() => {
+      closeNavbar()
+    }, 600) // Wait for teleportation effect
+  } else {
+    // Handle navigation based on current page
+    event.preventDefault() // Always prevent default for anchor links
+    
+    const target = event.target.closest('a')
+    const href = target?.getAttribute('href')
+    
+    if (href && href.includes('#')) {
+      const sectionId = href.split('#')[1]
+      
+      // Check if we're on projects page and need to go to home
+      if (currentRoute.path === '/projects') {
+        // Navigate to home page first, then scroll to section
+        createTeleportationEffect()
+        closeNavbar() // Close navbar immediately
+        
+        setTimeout(async () => {
+          await router.push('/')
+          
+          // Wait for page to load and DOM to be ready
+          await nextTick()
+          
+          setTimeout(() => {
+            const section = document.getElementById(sectionId)
+            if (section) {
+              // Smooth scroll with GSAP
+              gsap.to(window, {
+                duration: 1.2,
+                scrollTo: {
+                  y: section.offsetTop - 80, // Account for navbar height
+                  autoKill: false
+                },
+                ease: "power2.inOut"
+              })
+            }
+          }, 200)
+        }, 500)
+        
+        return
+      } else {
+        // Same page navigation - smooth scroll
+        const section = document.getElementById(sectionId)
+        
+        if (section) {
+          // Enhanced smooth scroll with GSAP
+          gsap.to(window, {
+            duration: 1.2,
+            scrollTo: {
+              y: section.offsetTop - 80, // Account for navbar height
+              autoKill: false
+            },
+            ease: "power2.inOut"
+          })
+        }
+        
+        setTimeout(() => {
+          closeNavbar()
+        }, 300)
+      }
+    }
+  }
+}
+
+const createTeleportationEffect = () => {
+  // Create teleportation visual effect
+  const navbar = document.querySelector('.dynamic-island')
+  if (!navbar) return
+  
+  // Add teleportation classes
+  navbar.classList.add('teleporting')
+  
+  // Create particle burst effect
+  createParticleBurst()
+  
+  // Create screen flash
+  createScreenFlash()
+  
+  // Remove effect after animation
   setTimeout(() => {
-    closeNavbar()
-  }, 300)
+    navbar.classList.remove('teleporting')
+  }, 800)
+}
+
+const createParticleBurst = () => {
+  const particleContainer = document.createElement('div')
+  particleContainer.className = 'teleport-particles'
+  document.body.appendChild(particleContainer)
+  
+  // Create multiple particles
+  for (let i = 0; i < 20; i++) {
+    const particle = document.createElement('div')
+    particle.className = 'teleport-particle'
+    particle.style.left = '50%'
+    particle.style.top = '50px'
+    
+    // Random direction and distance
+    const angle = (i / 20) * Math.PI * 2
+    const distance = 100 + Math.random() * 200
+    const x = Math.cos(angle) * distance
+    const y = Math.sin(angle) * distance
+    
+    particle.style.setProperty('--end-x', `${x}px`)
+    particle.style.setProperty('--end-y', `${y}px`)
+    
+    particleContainer.appendChild(particle)
+  }
+  
+  // Remove particles after animation
+  setTimeout(() => {
+    document.body.removeChild(particleContainer)
+  }, 1000)
+}
+
+const createScreenFlash = () => {
+  const flash = document.createElement('div')
+  flash.className = 'teleport-flash'
+  document.body.appendChild(flash)
+  
+  setTimeout(() => {
+    flash.classList.add('active')
+  }, 100)
+  
+  setTimeout(() => {
+    document.body.removeChild(flash)
+  }, 600)
 }
 
 // Close on escape key
@@ -426,7 +561,89 @@ onUnmounted(() => {
   letter-spacing: 1px;
 }
 
+/* Teleportation Effects */
+.dynamic-island.teleporting {
+  animation: teleportPulse 0.8s ease-in-out;
+  transform: translateX(-50%) scale(1.2);
+  box-shadow: 
+    0 0 50px rgba(59, 130, 246, 0.8),
+    0 0 100px rgba(59, 130, 246, 0.6),
+    0 0 150px rgba(59, 130, 246, 0.4);
+}
+
+.teleport-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.teleport-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: linear-gradient(45deg, #60a5fa, #3b82f6);
+  border-radius: 50%;
+  animation: particleBurst 0.8s ease-out forwards;
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.8);
+}
+
+.teleport-flash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9998;
+  transition: opacity 0.3s ease;
+}
+
+.teleport-flash.active {
+  opacity: 1;
+}
+
 /* Animations */
+@keyframes teleportPulse {
+  0% { 
+    transform: translateX(-50%) scale(1);
+    filter: brightness(1);
+  }
+  25% {
+    transform: translateX(-50%) scale(1.1);
+    filter: brightness(1.5) hue-rotate(90deg);
+  }
+  50% {
+    transform: translateX(-50%) scale(1.3);
+    filter: brightness(2) hue-rotate(180deg);
+  }
+  75% {
+    transform: translateX(-50%) scale(1.1);
+    filter: brightness(1.5) hue-rotate(270deg);
+  }
+  100% { 
+    transform: translateX(-50%) scale(1);
+    filter: brightness(1) hue-rotate(360deg);
+  }
+}
+
+@keyframes particleBurst {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--end-x), var(--end-y)) scale(0.2);
+  }
+}
+
+/* Existing Animations */
 @keyframes pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.7; transform: scale(1.05); }
