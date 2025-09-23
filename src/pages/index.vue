@@ -1,11 +1,14 @@
 <template>
-    <div>
-      <DynamicNavbar />
-      <HeroSection />
-      <AboutMeSection />
-      <ProjectsSection />
-      <ExperienceSection />
-      <FooterSection />
+    <div class="relative z-0 min-h-screen">
+      <MagicalCircuitBackground />
+      <div class="relative z-10">
+        <DynamicNavbar />
+        <HeroSection />
+        <AboutMeSection />
+        <ProjectsSection />
+        <ExperienceSection />
+        <FooterSection />
+      </div>
     </div>
   </template>
   
@@ -18,6 +21,7 @@
   import ExperienceSection from '../components/ExperienceSection.vue';
   import ProjectsSection from '../components/ProjectsSection.vue';
   import FooterSection from '../components/FooterSection.vue';
+  import MagicalCircuitBackground from '../components/MagicalCircuitBackground.vue';
   
   // Simple navigation handler for card stacking system
   const handleGlobalNavigation = (direction) => {

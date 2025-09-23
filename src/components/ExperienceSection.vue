@@ -1,6 +1,8 @@
 <template>
-  <section id="experience-section" class="py-16 bg-gray-900 text-white flex items-center justify-center min-h-screen opacity-100 visible">
-    <div class="container mx-auto px-4 max-w-4xl experience-content opacity-100 visible">
+  <section id="experience-section" class="py-16 bg-gray-900 text-white flex items-center justify-center min-h-screen opacity-100 visible relative">
+    <!-- Magical Circuit Background -->
+    <MagicalCircuitBackground />
+    <div class="container mx-auto px-4 max-w-4xl experience-content opacity-100 visible relative z-10">
       <!-- Header with Title -->
       <div class="text-center mb-12">
         <h2 class="text-4xl md:text-5xl font-extrabold text-blue-400 press-start-font mb-4">[ GUILD CODEX ]</h2>

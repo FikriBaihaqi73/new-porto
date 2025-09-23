@@ -1,6 +1,8 @@
 <template>
-  <section id="projects-section" class="py-16 bg-gray-900 text-white flex items-center justify-center min-h-screen overflow-hidden">
-    <div class="container mx-auto px-4 max-w-7xl projects-content">
+  <section id="projects-section" class="py-16 bg-gray-900 text-white flex items-center justify-center min-h-screen relative">
+    <!-- Magical Circuit Background -->
+    <MagicalCircuitBackground />
+    <div class="container mx-auto px-4 max-w-7xl projects-content relative z-10">
       <!-- Header with Hybrid Info -->
       <div class="text-center mb-12 border-b border-blue-600 pb-6">
         <h2 class="text-5xl md:text-6xl font-extrabold text-blue-400 font-outfit mb-4">[ FEATURED PROJECTS ]</h2>
@@ -230,9 +232,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
-import gsap from "gsap";
-import { Observer } from "gsap/Observer";
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import gsap from 'gsap'
+import { Observer } from 'gsap/Observer'
+import MagicalCircuitBackground from './MagicalCircuitBackground.vue'
 
 const mainProjectDisplay = ref(null);
 const previewStack = ref(null);
@@ -649,4 +652,5 @@ onUnmounted(() => {
   .main-project-display .p-4 {
     padding: 0.75rem;
   }
-}</style>
+}
+</style>

@@ -1,6 +1,8 @@
 <template>
-    <section id="about-section" class="py-16 bg-gray-900 text-white flex items-center justify-center min-h-screen opacity-100 visible">
-      <div class="container mx-auto px-4 max-w-6xl about-content opacity-100 visible">
+    <section id="about-section" class="py-16 bg-gray-900 text-white flex items-center justify-center min-h-screen opacity-100 visible relative">
+      <!-- Magical Circuit Background -->
+      <MagicalCircuitBackground />
+      <div class="container mx-auto px-4 max-w-6xl about-content opacity-100 visible relative z-10">
         <div class="bg-gray-800 border-2 border-blue-500 rounded-sm shadow-xl overflow-hidden p-8 relative">
           <!-- Header with Title -->
           <div class="text-center mb-8 border-b border-blue-600 pb-4">
@@ -83,6 +85,7 @@
   import gsap from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
   import { Observer } from "gsap/Observer";
+  import MagicalCircuitBackground from './MagicalCircuitBackground.vue'
   
   const radarChart = ref(null);
   let dustParticles = [];
