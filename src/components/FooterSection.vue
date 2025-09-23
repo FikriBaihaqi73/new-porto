@@ -339,15 +339,15 @@ onMounted(() => {
 <style scoped>
 /* Font families */
 .font-outfit {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Press Start 2P', 'Press Start 2P Fallback', monospace;
 }
 
 .font-inter {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Press Start 2P', 'Press Start 2P Fallback', monospace;
 }
 
 .font-mono {
-  font-family: 'Roboto Mono', monospace;
+  font-family: 'Press Start 2P', 'Press Start 2P Fallback', monospace;
 }
 
 /* Grid background pattern */

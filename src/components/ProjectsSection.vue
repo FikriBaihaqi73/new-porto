@@ -285,6 +285,32 @@ const projects = ref([
     liveUrl: "#",
     githubUrl: "#",
     featured: true
+  },
+  {
+    id: 4,
+    title: "Task Management System",
+    description: "Comprehensive project management tool with team collaboration, real-time updates, and advanced analytics dashboard.",
+    image: "https://via.placeholder.com/400x200/059669/ffffff?text=Task+Manager",
+    type: "PRODUCTIVITY",
+    status: "ACTIVE",
+    progress: 85,
+    techStack: ["React", "Express", "PostgreSQL", "Socket.io"],
+    liveUrl: "#",
+    githubUrl: "#",
+    featured: true
+  },
+  {
+    id: 5,
+    title: "Digital Portfolio",
+    description: "Modern portfolio website with interactive animations, responsive design, and dynamic content management system.",
+    image: "https://via.placeholder.com/400x200/7c2d12/ffffff?text=Portfolio+Site",
+    type: "PORTFOLIO",
+    status: "LIVE",
+    progress: 95,
+    techStack: ["Nuxt.js", "TailwindCSS", "GSAP", "Netlify"],
+    liveUrl: "#",
+    githubUrl: "#",
+    featured: true
   }
 ]);
 
@@ -474,7 +500,7 @@ onUnmounted(() => {
 <style scoped>
 /* Font families */
 .font-mono {
-  font-family: 'Roboto Mono', monospace;
+  font-family: 'Press Start 2P', 'Press Start 2P Fallback', monospace;
 }
 
 /* Projects Stack Container - Three Column Layout with overflow visible */

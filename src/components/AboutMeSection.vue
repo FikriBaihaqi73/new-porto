@@ -1,7 +1,7 @@
 <template>
     <section id="about-section" class="py-16 bg-gray-900 text-white flex items-center justify-center min-h-screen opacity-100 visible">
       <div class="container mx-auto px-4 max-w-6xl about-content opacity-100 visible">
-        <div class="bg-gray-800 border-2 border-blue-500 rounded-lg shadow-xl overflow-hidden p-8 relative">
+        <div class="bg-gray-800 border-2 border-blue-500 rounded-sm shadow-xl overflow-hidden p-8 relative">
           <!-- Header with Title -->
           <div class="text-center mb-8 border-b border-blue-600 pb-4">
             <h2 class="text-4xl md:text-5xl font-extrabold text-blue-400 font-outfit">[ STATUS WINDOW ]</h2>
@@ -14,9 +14,9 @@
                 <img 
                   src="https://via.placeholder.com/250" 
                   alt="Profile Picture" 
-                  class="w-64 h-64 rounded-xl object-cover border-2 border-blue-400 shadow-md"
+                  class="w-64 h-64 rounded-sm object-cover border-2 border-blue-400 shadow-md"
                 >
-                <div class="level-badge absolute -bottom-3 -right-3 bg-blue-500 text-white px-4 py-2 rounded-full text-xl font-bold border-2 border-blue-300 shadow-md font-outfit">
+                <div class="level-badge absolute -bottom-3 -right-3 bg-blue-500 text-white px-4 py-2 rounded-sm text-xl font-bold border-2 border-blue-300 shadow-md font-outfit">
                   LVL 10
                 </div>
               </div>
@@ -32,7 +32,7 @@
             <!-- Right Column: Stats, Description, Skills, Tools -->
             <div class="lg:w-2/3 flex flex-col gap-6">
               <!-- Stats Section -->
-              <div class="bg-gray-700 p-6 rounded-lg border border-blue-600 shadow-sm stats-section">
+              <div class="bg-gray-700 p-6 rounded-sm border border-blue-600 shadow-sm stats-section">
                 <h4 class="text-3xl font-bold mb-6 text-blue-300 font-outfit text-center">STATS</h4>
                 <div class="flex justify-center">
                   <div ref="radarChart" class="w-[400px] h-[350px]"></div>
@@ -40,7 +40,7 @@
               </div>
 
               <!-- Description -->
-              <div class="bg-gray-700 p-6 rounded-lg border border-blue-600 shadow-sm description-section">
+              <div class="bg-gray-700 p-6 rounded-sm border border-blue-600 shadow-sm description-section">
                 <h4 class="text-3xl font-bold mb-4 text-blue-300 font-outfit">DESKRIPSI</h4>
                 <p class="text-gray-200 leading-relaxed text-base font-inter">
                   Seorang petualang digital yang bersemangat, mengarungi lautan kode dengan pedang keyboard di tangan. Dengan pengalaman lebih dari 3 tahun, saya telah menaklukkan berbagai bug dan membangun sistem yang kokoh. Misi saya adalah mengubah ide menjadi realitas digital, satu baris kode pada satu waktu.
@@ -48,26 +48,26 @@
               </div>
   
               <!-- Skills -->
-              <div class="bg-gray-700 p-6 rounded-lg border border-blue-600 shadow-sm skills-section">
+              <div class="bg-gray-700 p-6 rounded-sm border border-blue-600 shadow-sm skills-section">
                 <h4 class="text-3xl font-bold mb-4 text-blue-300 font-outfit">SKILLS</h4>
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  <span class="skill-tag bg-blue-700 text-white px-3 py-2 rounded-full text-sm font-semibold font-roboto-mono border border-blue-500 shadow-sm text-center">JavaScript</span>
-                  <span class="skill-tag bg-blue-700 text-white px-3 py-2 rounded-full text-sm font-semibold font-roboto-mono border border-blue-500 shadow-sm text-center">Vue.js</span>
-                  <span class="skill-tag bg-blue-700 text-white px-3 py-2 rounded-full text-sm font-semibold font-roboto-mono border border-blue-500 shadow-sm text-center">Node.js</span>
-                  <span class="skill-tag bg-blue-700 text-white px-3 py-2 rounded-full text-sm font-semibold font-roboto-mono border border-blue-500 shadow-sm text-center">Tailwind CSS</span>
-                  <span class="skill-tag bg-blue-700 text-white px-3 py-2 rounded-full text-sm font-semibold font-roboto-mono border border-blue-500 shadow-sm text-center">Database (SQL/NoSQL)</span>
-                  <span class="skill-tag bg-blue-700 text-white px-3 py-2 rounded-full text-sm font-semibold font-roboto-mono border border-blue-500 shadow-sm text-center">RESTful API</span>
+                  <span class="skill-tag bg-blue-700 text-white px-3 py-2 rounded-sm text-sm font-semibold font-roboto-mono border border-blue-500 shadow-sm text-center">JavaScript</span>
+                  <span class="skill-tag bg-blue-700 text-white px-3 py-2 rounded-sm text-sm font-semibold font-roboto-mono border border-blue-500 shadow-sm text-center">Vue.js</span>
+                  <span class="skill-tag bg-blue-700 text-white px-3 py-2 rounded-sm text-sm font-semibold font-roboto-mono border border-blue-500 shadow-sm text-center">Node.js</span>
+                  <span class="skill-tag bg-blue-700 text-white px-3 py-2 rounded-sm text-sm font-semibold font-roboto-mono border border-blue-500 shadow-sm text-center">Tailwind CSS</span>
+                  <span class="skill-tag bg-blue-700 text-white px-3 py-2 rounded-sm text-sm font-semibold font-roboto-mono border border-blue-500 shadow-sm text-center">Database (SQL/NoSQL)</span>
+                  <span class="skill-tag bg-blue-700 text-white px-3 py-2 rounded-sm text-sm font-semibold font-roboto-mono border border-blue-500 shadow-sm text-center">RESTful API</span>
                 </div>
               </div>
   
               <!-- Tools -->
-              <div class="bg-gray-700 p-6 rounded-lg border border-blue-600 shadow-sm tools-section">
+              <div class="bg-gray-700 p-6 rounded-sm border border-blue-600 shadow-sm tools-section">
                 <h4 class="text-3xl font-bold mb-4 text-blue-300 font-outfit">TOOLS</h4>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <span class="tool-tag bg-gray-600 text-white px-3 py-2 rounded-full text-sm font-semibold font-roboto-mono border border-gray-400 shadow-sm text-center">VS Code</span>
-                  <span class="tool-tag bg-gray-600 text-white px-3 py-2 rounded-full text-sm font-semibold font-roboto-mono border border-gray-400 shadow-sm text-center">Git</span>
-                  <span class="tool-tag bg-gray-600 text-white px-3 py-2 rounded-full text-sm font-semibold font-roboto-mono border border-gray-400 shadow-sm text-center">NPM/Yarn</span>
-                  <span class="tool-tag bg-gray-600 text-white px-3 py-2 rounded-full text-sm font-semibold font-roboto-mono border border-gray-400 shadow-sm text-center">Docker</span>
+                  <span class="tool-tag bg-gray-600 text-white px-3 py-2 rounded-sm text-sm font-semibold font-roboto-mono border border-gray-400 shadow-sm text-center">VS Code</span>
+                  <span class="tool-tag bg-gray-600 text-white px-3 py-2 rounded-sm text-sm font-semibold font-roboto-mono border border-gray-400 shadow-sm text-center">Git</span>
+                  <span class="tool-tag bg-gray-600 text-white px-3 py-2 rounded-sm text-sm font-semibold font-roboto-mono border border-gray-400 shadow-sm text-center">NPM/Yarn</span>
+                  <span class="tool-tag bg-gray-600 text-white px-3 py-2 rounded-sm text-sm font-semibold font-roboto-mono border border-gray-400 shadow-sm text-center">Docker</span>
                 </div>
               </div>
             </div>
@@ -247,14 +247,14 @@
   
   <style scoped>
   .font-outfit {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Press Start 2P', 'Press Start 2P Fallback', monospace;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
   }
   .font-inter {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Press Start 2P', 'Press Start 2P Fallback', monospace;
   }
   .font-roboto-mono {
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Press Start 2P', 'Press Start 2P Fallback', monospace;
   }
 
   /* Hover effects for interactive feel */

@@ -274,7 +274,7 @@ onUnmounted(() => {
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Press Start 2P', 'Press Start 2P Fallback', monospace;
 }
 
 /* Dynamic Island Base */

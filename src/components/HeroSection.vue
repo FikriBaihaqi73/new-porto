@@ -535,6 +535,12 @@
   </script>
   
   <style scoped>
+  /* Press Start 2P Font Family */
+  #hero-section,
+  #hero-section * {
+    font-family: 'Press Start 2P', 'Press Start 2P Fallback', monospace;
+  }
+  
   .particle-canvas {
     position: absolute;
     inset: 0;

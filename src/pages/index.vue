@@ -4,6 +4,7 @@
       <HeroSection />
       <AboutMeSection />
       <ProjectsSection />
+      <ExperienceSection />
       <FooterSection />
     </div>
   </template>
@@ -14,6 +15,7 @@
   import DynamicNavbar from '../components/DynamicNavbar.vue';
   import HeroSection from '../components/HeroSection.vue';
   import AboutMeSection from '../components/AboutMeSection.vue';
+  import ExperienceSection from '../components/ExperienceSection.vue';
   import ProjectsSection from '../components/ProjectsSection.vue';
   import FooterSection from '../components/FooterSection.vue';
   
