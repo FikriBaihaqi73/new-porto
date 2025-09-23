@@ -1,5 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-900 text-white">
+    <DynamicNavbar />
     <!-- Header -->
     <div class="bg-gray-800 border-b border-blue-600">
       <div class="container mx-auto px-4 py-6 max-w-7xl">
@@ -274,6 +275,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import DynamicNavbar from '../components/DynamicNavbar.vue'
 
 // Set page meta
 useHead({

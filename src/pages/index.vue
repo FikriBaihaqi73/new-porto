@@ -1,5 +1,6 @@
 <template>
     <div>
+      <DynamicNavbar />
       <HeroSection />
       <AboutMeSection />
       <ProjectsSection />
@@ -10,6 +11,7 @@
   <script setup>
   import { onMounted, onUnmounted } from 'vue';
   import gsap from 'gsap';
+  import DynamicNavbar from '../components/DynamicNavbar.vue';
   import HeroSection from '../components/HeroSection.vue';
   import AboutMeSection from '../components/AboutMeSection.vue';
   import ProjectsSection from '../components/ProjectsSection.vue';

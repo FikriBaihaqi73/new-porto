@@ -29,6 +29,23 @@ input[type="reset"]:hover {
 
 /* Special cursors for different contexts */
 
+/* Dynamic Navbar - special navigation cursor */
+.dynamic-island {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="%2360a5fa" stroke-width="2" fill="none"/><path d="M8 12h8M12 8v8" stroke="%2360a5fa" stroke-width="2"/></svg>'), pointer !important;
+}
+
+.dynamic-island.expanded {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="%2322d3ee" stroke-width="2" fill="%231e40af" opacity="0.3"/><path d="M12 4V20M4 12H20" stroke="%2322d3ee" stroke-width="2"/></svg>'), default !important;
+}
+
+.nav-link:hover {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 12L13 16L21 8" stroke="%2322d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="10" stroke="%2360a5fa" stroke-width="1" fill="none"/></svg>'), pointer !important;
+}
+
+.close-btn:hover {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="%23ef4444" stroke-width="2" fill="none"/><path d="M15 9L9 15M9 9L15 15" stroke="%23ef4444" stroke-width="2"/></svg>'), pointer !important;
+}
+
 /* Back button - special return cursor */
 .back-button:hover {
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M12 19L5 12L12 5" stroke="%2322d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'), pointer !important;
