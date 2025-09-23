@@ -1,8 +1,8 @@
 <template>
-    <section class="relative py-20 bg-gray-900 text-white text-center flex items-center justify-center min-h-screen overflow-hidden">
+    <section id="hero-section" class="relative py-20 bg-gray-900 text-white text-center flex items-center justify-center min-h-screen overflow-hidden">
       <canvas id="particle-canvas" class="particle-canvas"></canvas>
   
-      <div class="relative z-10 container mx-auto px-4 max-w-4xl">
+      <div class="relative z-10 container mx-auto px-4 max-w-4xl hero-content">
         <h1 class="text-6xl md:text-7xl font-extrabold mb-4">
           <span id="name-text" class="text-blue-500">MUHAMMAD FIKRI BAIHAQI</span>
         </h1>
@@ -30,11 +30,15 @@
   <script setup>
   import { onMounted, onUnmounted } from "vue";
   import gsap from "gsap";
+  import { Observer } from "gsap/Observer";
   
   let particles = [];
+  let dustParticles = [];
   let mouse = { x: 0, y: 0 };
-  let canvas, ctx;
+  let canvas, ctx, dustCanvas, dustCtx;
   let animationFrameId;
+  let scrollObserver;
+  let isTransitioning = false;
   
   // === Particle System ===
   const createParticles = () => {
@@ -49,6 +53,12 @@
     if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    
+    if (dustCanvas) {
+      dustCanvas.width = window.innerWidth;
+      dustCanvas.height = window.innerHeight;
+    }
+    
     createParticles();
   };
   
@@ -111,6 +121,10 @@
       p.update();
       p.draw();
     });
+    
+    // Animate dust particles
+    animateDustParticles();
+    
     animationFrameId = requestAnimationFrame(animateParticles);
   };
   
@@ -118,20 +132,208 @@
     mouse.x = e.clientX;
     mouse.y = e.clientY;
   };
+
+  // === Dust Particle System ===
+  class DustParticle {
+    constructor(x, y, color = 'rgba(59, 130, 246, 0.8)') {
+      this.x = x;
+      this.y = y;
+      this.vx = (Math.random() - 0.5) * 3; // Reduced speed for smoother effect
+      this.vy = (Math.random() - 0.5) * 3;
+      this.life = 1;
+      this.decay = Math.random() * 0.015 + 0.008; // Faster decay
+      this.size = Math.random() * 2.5 + 0.8; // Slightly smaller particles
+      this.color = color;
+      this.gravity = 0.04; // Slightly stronger gravity
+    }
+
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.vy += this.gravity;
+      this.life -= this.decay;
+      this.vx *= 0.98; // Faster deceleration
+      this.vy *= 0.98;
+    }
+
+    draw(ctx) {
+      ctx.save();
+      ctx.globalAlpha = this.life;
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    isDead() {
+      return this.life <= 0;
+    }
+  }
+
+  const createDustExplosion = (element, direction = 'down') => {
+    if (!dustCanvas || !dustCtx) return;
+    
+    const rect = element.getBoundingClientRect();
+    const particleCount = 150;
+    const colors = [
+      'rgba(59, 130, 246, 0.8)',
+      'rgba(96, 165, 250, 0.8)', 
+      'rgba(147, 197, 253, 0.8)',
+      'rgba(255, 255, 255, 0.6)'
+    ];
+
+    // Create dust particles from element bounds
+    for (let i = 0; i < particleCount; i++) {
+      const x = rect.left + Math.random() * rect.width;
+      const y = rect.top + Math.random() * rect.height;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      
+      const particle = new DustParticle(x, y, color);
+      
+      // Adjust particle movement based on scroll direction
+      if (direction === 'down') {
+        particle.vy = Math.random() * 3 + 1; // Particles fall down
+        particle.vx = (Math.random() - 0.5) * 6;
+      } else {
+        particle.vy = -(Math.random() * 3 + 1); // Particles rise up
+        particle.vx = (Math.random() - 0.5) * 6;
+      }
+      
+      dustParticles.push(particle);
+    }
+
+    // Add screen shake effect
+    gsap.to(element, {
+      x: '+=5',
+      yoyo: true,
+      repeat: 5,
+      duration: 0.1,
+      ease: 'power2.inOut'
+    });
+  };
+
+  const animateDustParticles = () => {
+    if (!dustCtx || !dustCanvas) return;
+    
+    dustCtx.clearRect(0, 0, dustCanvas.width, dustCanvas.height);
+    
+    dustParticles = dustParticles.filter(particle => {
+      particle.update();
+      particle.draw(dustCtx);
+      return !particle.isDead();
+    });
+  };
+
+  const setupScrollObserver = () => {
+    let lastScrollY = 0;
+    let scrollDirection = 'down';
+    
+    scrollObserver = Observer.create({
+      target: window,
+      type: 'scroll,touch',
+      onChangeY: (self) => {
+        if (isTransitioning) return;
+        
+        const currentScrollY = window.scrollY;
+        scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
+        lastScrollY = currentScrollY;
+        
+        const heroSection = document.getElementById('hero-section');
+        const aboutSection = document.querySelector('#about-section, section:nth-of-type(2)');
+        
+        if (!heroSection) return;
+        
+        const heroRect = heroSection.getBoundingClientRect();
+        const scrollThreshold = window.innerHeight * 0.5; // Reduced threshold for faster response
+        
+        // Check if we're scrolling past the hero section
+        if (scrollDirection === 'down' && heroRect.bottom < scrollThreshold) {
+          if (!heroSection.classList.contains('dissolving')) {
+            isTransitioning = true;
+            heroSection.classList.add('dissolving');
+            
+            // Create dust explosion
+            const heroContent = heroSection.querySelector('.hero-content');
+            if (heroContent) {
+              createDustExplosion(heroContent, 'down');
+            }
+            
+            // Clean dissolve animation without glitch effects
+            gsap.to(heroContent, {
+              opacity: 0,
+              scale: 0.9,
+              filter: 'blur(6px)',
+              duration: 0.5,
+              ease: 'power2.out',
+              onComplete: () => {
+                setTimeout(() => {
+                  isTransitioning = false;
+                }, 100);
+              }
+            });
+          }
+        }
+        
+        // Check if we're scrolling back up to hero section with faster response
+        else if (scrollDirection === 'up' && heroRect.top > -window.innerHeight * 0.2) { // More responsive threshold
+          if (heroSection.classList.contains('dissolving')) {
+            isTransitioning = true;
+            heroSection.classList.remove('dissolving');
+            
+            const heroContent = heroSection.querySelector('.hero-content');
+            if (heroContent) {
+              // Create reformation effect
+              createDustExplosion(heroContent, 'up');
+              
+              // Clean reform animation without glitch effects
+              gsap.to(heroContent, {
+                opacity: 1,
+                scale: 1,
+                filter: 'blur(0px)',
+                duration: 0.5,
+                ease: 'power2.out',
+                onComplete: () => {
+                  setTimeout(() => {
+                    isTransitioning = false;
+                  }, 100);
+                }
+              });
+            }
+          }
+        }
+      }
+    });
+  };
   
   // === Text Animations ===
   onMounted(() => {
     console.log("Component mounted");
     
-    // Canvas setup
-    canvas = document.getElementById("particle-canvas");
-    if (canvas) {
-      ctx = canvas.getContext("2d");
-      resizeCanvas();
-      window.addEventListener("resize", resizeCanvas);
-      window.addEventListener("mousemove", handleMouseMove);
-      animateParticles();
-      console.log("Particle system initialized");
+    // Check if mobile device
+    const isMobile = window.innerWidth <= 768;
+    
+    // Canvas setup (desktop only)
+    if (!isMobile) {
+      canvas = document.getElementById("particle-canvas");
+      dustCanvas = document.getElementById("dust-canvas");
+      
+      if (canvas) {
+        ctx = canvas.getContext("2d");
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas);
+        window.addEventListener("mousemove", handleMouseMove);
+        animateParticles();
+        console.log("Particle system initialized");
+      }
+      
+      if (dustCanvas) {
+        dustCtx = dustCanvas.getContext("2d");
+        console.log("Dust canvas initialized");
+      }
+      
+      // Setup scroll observer for dust effects (desktop only)
+      setupScrollObserver();
     }
   
     // Wait a bit for DOM to be ready
@@ -161,6 +363,38 @@
         "Jika frontend adalah panggung, maka aku adalah dalang di balik tirai."
       ];
   
+      if (isMobile) {
+        // Simple mobile version - no complex animations
+        nameTextElement.textContent = "MUHAMMAD FIKRI BAIHAQI";
+        taglineTextElement.textContent = taglines[0];
+        
+        // Simple fade in
+        gsap.set([nameTextElement, taglineTextElement, buttonContainer], { opacity: 0 });
+        gsap.to([nameTextElement, taglineTextElement, buttonContainer], {
+          opacity: 1,
+          duration: 1,
+          stagger: 0.3,
+          ease: "power2.out"
+        });
+        
+        // Simple tagline cycling (no character animation)
+        let currentIndex = 0;
+        setInterval(() => {
+          currentIndex = (currentIndex + 1) % taglines.length;
+          gsap.to(taglineTextElement, {
+            opacity: 0,
+            duration: 0.3,
+            onComplete: () => {
+              taglineTextElement.textContent = taglines[currentIndex];
+              gsap.to(taglineTextElement, { opacity: 1, duration: 0.3 });
+            }
+          });
+        }, 3000);
+        
+        return;
+      }
+  
+      // Desktop animations (keep existing complex animations)
       // Setup name with individual character spans
       const name = "MUHAMMAD FIKRI BAIHAQI";
       nameTextElement.innerHTML = "";
@@ -288,8 +522,15 @@
     if (animationFrameId) {
       cancelAnimationFrame(animationFrameId);
     }
-    window.removeEventListener("resize", resizeCanvas);
-    window.removeEventListener("mousemove", handleMouseMove);
+    if (scrollObserver) {
+      scrollObserver.kill();
+    }
+    
+    // Only remove listeners if they were added (desktop only)
+    if (window.innerWidth > 768) {
+      window.removeEventListener("resize", resizeCanvas);
+      window.removeEventListener("mousemove", handleMouseMove);
+    }
   });
   </script>
   
@@ -300,5 +541,57 @@
     width: 100%;
     height: 100%;
     z-index: 0;
+  }
+  
+  .dust-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 15;
+    pointer-events: none;
+  }
+  
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    .particle-canvas,
+    .dust-canvas {
+      display: none; /* Hide canvas on mobile for performance */
+    }
+    
+    #hero-section {
+      padding: 3rem 1rem; /* Reduce padding */
+      min-height: 80vh; /* Reduce height */
+    }
+    
+    .hero-content h1 {
+      font-size: 2.5rem; /* Smaller text */
+      line-height: 1.1;
+    }
+    
+    .hero-content p {
+      font-size: 1.1rem; /* Smaller tagline */
+      min-height: 2rem;
+    }
+    
+    #button-container {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    #button-container a {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .hero-content h1 {
+      font-size: 2rem;
+    }
+    
+    .hero-content p {
+      font-size: 1rem;
+    }
   }
   </style>

@@ -1,6 +1,6 @@
 <template>
-    <section class="py-16 bg-gray-900 text-white flex items-center justify-center min-h-screen">
-      <div class="container mx-auto px-4 max-w-6xl">
+    <section id="about-section" class="py-16 bg-gray-900 text-white flex items-center justify-center min-h-screen opacity-100 visible">
+      <div class="container mx-auto px-4 max-w-6xl about-content opacity-100 visible">
         <div class="bg-gray-800 border-2 border-blue-500 rounded-lg shadow-xl overflow-hidden p-8 relative">
           <!-- Header with Title -->
           <div class="text-center mb-8 border-b border-blue-600 pb-4">
@@ -9,7 +9,7 @@
   
           <div class="flex flex-col lg:flex-row gap-8">
             <!-- Left Column: Photo, Name, Role, Race -->
-            <div class="lg:w-1/3 flex flex-col items-center about-me-animate left-column-content">
+            <div class="lg:w-1/3 flex flex-col items-center left-column-content">
               <div class="relative mb-6">
                 <img 
                   src="https://via.placeholder.com/250" 
@@ -32,7 +32,7 @@
             <!-- Right Column: Stats, Description, Skills, Tools -->
             <div class="lg:w-2/3 flex flex-col gap-6">
               <!-- Stats Section -->
-              <div class="bg-gray-700 p-6 rounded-lg border border-blue-600 shadow-sm about-me-animate stats-section">
+              <div class="bg-gray-700 p-6 rounded-lg border border-blue-600 shadow-sm stats-section">
                 <h4 class="text-3xl font-bold mb-6 text-blue-300 font-outfit text-center">STATS</h4>
                 <div class="flex justify-center">
                   <div ref="radarChart" class="w-[400px] h-[350px]"></div>
@@ -40,7 +40,7 @@
               </div>
 
               <!-- Description -->
-              <div class="bg-gray-700 p-6 rounded-lg border border-blue-600 shadow-sm about-me-animate description-section">
+              <div class="bg-gray-700 p-6 rounded-lg border border-blue-600 shadow-sm description-section">
                 <h4 class="text-3xl font-bold mb-4 text-blue-300 font-outfit">DESKRIPSI</h4>
                 <p class="text-gray-200 leading-relaxed text-base font-inter">
                   Seorang petualang digital yang bersemangat, mengarungi lautan kode dengan pedang keyboard di tangan. Dengan pengalaman lebih dari 3 tahun, saya telah menaklukkan berbagai bug dan membangun sistem yang kokoh. Misi saya adalah mengubah ide menjadi realitas digital, satu baris kode pada satu waktu.
@@ -48,7 +48,7 @@
               </div>
   
               <!-- Skills -->
-              <div class="bg-gray-700 p-6 rounded-lg border border-blue-600 shadow-sm about-me-animate skills-section">
+              <div class="bg-gray-700 p-6 rounded-lg border border-blue-600 shadow-sm skills-section">
                 <h4 class="text-3xl font-bold mb-4 text-blue-300 font-outfit">SKILLS</h4>
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   <span class="skill-tag bg-blue-700 text-white px-3 py-2 rounded-full text-sm font-semibold font-roboto-mono border border-blue-500 shadow-sm text-center">JavaScript</span>
@@ -61,7 +61,7 @@
               </div>
   
               <!-- Tools -->
-              <div class="bg-gray-700 p-6 rounded-lg border border-blue-600 shadow-sm about-me-animate tools-section">
+              <div class="bg-gray-700 p-6 rounded-lg border border-blue-600 shadow-sm tools-section">
                 <h4 class="text-3xl font-bold mb-4 text-blue-300 font-outfit">TOOLS</h4>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <span class="tool-tag bg-gray-600 text-white px-3 py-2 rounded-full text-sm font-semibold font-roboto-mono border border-gray-400 shadow-sm text-center">VS Code</span>
@@ -82,11 +82,51 @@
   import * as echarts from "echarts";
   import gsap from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
+  import { Observer } from "gsap/Observer";
   
   const radarChart = ref(null);
+  let dustParticles = [];
+  let dustCanvas, dustCtx;
+  let animationFrameId;
   
   onMounted(() => {
-    // Initial setup for ECharts (already present)
+    // Check if mobile device
+    const isMobile = window.innerWidth <= 768;
+    
+    // Dust canvas setup (desktop only)
+    if (!isMobile) {
+      dustCanvas = document.getElementById("about-dust-canvas");
+      if (dustCanvas) {
+        dustCtx = dustCanvas.getContext("2d");
+        dustCanvas.width = window.innerWidth;
+        dustCanvas.height = window.innerHeight;
+        
+        const resizeDustCanvas = () => {
+          dustCanvas.width = window.innerWidth;
+          dustCanvas.height = window.innerHeight;
+        };
+        
+        window.addEventListener("resize", resizeDustCanvas);
+        
+        // Start dust animation loop
+        const animateDust = () => {
+          if (dustCtx && dustCanvas) {
+            dustCtx.clearRect(0, 0, dustCanvas.width, dustCanvas.height);
+            
+            dustParticles = dustParticles.filter(particle => {
+              particle.update();
+              particle.draw(dustCtx);
+              return !particle.isDead();
+            });
+          }
+          animationFrameId = requestAnimationFrame(animateDust);
+        };
+        
+        animateDust();
+      }
+    }
+    
+    // Setup ECharts
     if (radarChart.value) {
       const chart = echarts.init(radarChart.value);
   
@@ -108,13 +148,13 @@
             { name: "Intelegent", max: 30 },
           ],
           center: ["50%", "50%"],
-          radius: "65%",
+          radius: isMobile ? "55%" : "65%", // Smaller on mobile
           startAngle: 90,
           splitNumber: 5,
           shape: "circle",
           axisName: {
             color: "#93c5fd",
-            fontSize: 13,
+            fontSize: isMobile ? 10 : 13, // Smaller text on mobile
             fontWeight: "bold",
             fontFamily: "Outfit, sans-serif"
           },
@@ -156,7 +196,7 @@
                   width: 3
                 },
                 symbol: "circle",
-                symbolSize: 6,
+                symbolSize: isMobile ? 4 : 6, // Smaller on mobile
                 itemStyle: {
                   color: "#60a5fa",
                   borderColor: "#1e40af",
@@ -169,7 +209,7 @@
                   },
                   color: "#fff",
                   fontWeight: "bold",
-                  fontSize: 10,
+                  fontSize: isMobile ? 8 : 10, // Smaller on mobile
                   fontFamily: "Outfit, sans-serif"
                 }
               },
@@ -193,94 +233,16 @@
       });
     }
   
-    // Set initial states for elements to animate in
-    gsap.set(".about-me-animate", { opacity: 0, y: 50 });
-  
-    // Animation for Left Column (Photo, Name, Role, Race)
-    gsap.to(".left-column-content", {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".left-column-content",
-        start: "top 85%", // Adjust as needed
-        end: "bottom 15%", // End animation when element is 15% from bottom of viewport
-        toggleActions: "play reverse play reverse", // Play on enter, reverse on leave back, play on enter back, reverse on leave
-        // markers: true,
-        // once: true,
-      },
-    });
-  
-    // Animation for Stats Section
-    gsap.to(".stats-section", {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".stats-section",
-        start: "top 85%", // Adjust as needed
-        end: "bottom 15%",
-        toggleActions: "play reverse play reverse",
-        // markers: true,
-        // once: true,
-      },
-    });
-  
-    // Animation for Description
-    gsap.to(".description-section", {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".description-section",
-        start: "top 85%", // Adjust as needed
-        end: "bottom 15%",
-        toggleActions: "play reverse play reverse",
-        // markers: true,
-        // once: true,
-      },
-    });
-  
-    // Animation for Skills Section
-    gsap.to(".skills-section", {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".skills-section",
-        start: "top 85%", // Adjust as needed
-        end: "bottom 15%",
-        toggleActions: "play reverse play reverse",
-        // markers: true,
-        // once: true,
-      },
-    });
-  
-    // Animation for Tools Section
-    gsap.to(".tools-section", {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".tools-section",
-        start: "top 85%", // Adjust as needed
-        end: "bottom 15%",
-        toggleActions: "play reverse play reverse",
-        // markers: true,
-        // once: true,
-      },
-    });
-  
-    // Cleanup ScrollTrigger instances on unmount
-    onUnmounted(() => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    });
+    // No GSAP animations - content is visible immediately
   });
+  
+  onUnmounted(() => {
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+    }
+  });
+  
+  // Dust particle system remains but without complex formation animations
   </script>
   
   <style scoped>
@@ -306,5 +268,99 @@
     background-color: #4b5563;
     transform: translateY(-1px);
     transition: all 0.2s ease;
+  }
+  
+  .about-dust-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 15;
+    pointer-events: none;
+  }
+  
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    .about-dust-canvas {
+      display: none; /* Hide dust canvas on mobile */
+    }
+    
+    #about-section {
+      padding: 2rem 0; /* Reduce padding */
+      min-height: auto; /* Remove min-height constraint */
+    }
+    
+    .container {
+      padding: 0 1rem;
+    }
+    
+    .bg-gray-800 {
+      padding: 1.5rem; /* Reduce padding */
+    }
+    
+    /* Stack layout on mobile */
+    .flex.flex-col.lg\:flex-row {
+      gap: 1.5rem;
+    }
+    
+    /* Smaller profile image */
+    .w-64.h-64 {
+      width: 12rem;
+      height: 12rem;
+    }
+    
+    /* Smaller radar chart container */
+    .w-\[400px\].h-\[350px\] {
+      width: 280px;
+      height: 240px;
+    }
+    
+    /* Adjust text sizes */
+    .text-4xl.md\:text-5xl {
+      font-size: 2rem;
+    }
+    
+    .text-3xl {
+      font-size: 1.5rem;
+    }
+    
+    .text-lg {
+      font-size: 1rem;
+    }
+    
+    /* Simplify grid layouts */
+    .grid.grid-cols-2.sm\:grid-cols-3 {
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+    
+    .grid.grid-cols-2.sm\:grid-cols-4 {
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+    
+    /* Smaller tags */
+    .skill-tag,
+    .tool-tag {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .bg-gray-800 {
+      padding: 1rem;
+    }
+    
+    .w-\[280px\].h-\[240px\] {
+      width: 240px;
+      height: 200px;
+    }
+    
+    .skill-tag,
+    .tool-tag {
+      padding: 0.375rem 0.5rem;
+      font-size: 0.7rem;
+    }
   }
   </style>
