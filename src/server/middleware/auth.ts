@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
     return;
   }
 
-  const token = event.headers.get('authorization')?.split(' ')[1];
+  const token = getCookie(event, 'authToken'); // Baca token dari cookie
 
   if (!token) {
     throw createError({

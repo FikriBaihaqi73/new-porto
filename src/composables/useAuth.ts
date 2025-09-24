@@ -1,40 +1,24 @@
 import { ref } from 'vue';
 
 export const useAuth = () => {
-  const token = ref<string | null>(null);
+  const authTokenCookie = useCookie<string | null>('authToken'); // Use useCookie
+  const token = ref<string | null>(authTokenCookie.value);
 
   const setToken = (newToken: string) => {
     token.value = newToken;
-    if (process.client) {
-      localStorage.setItem('authToken', newToken);
-    }
+    authTokenCookie.value = newToken; // Store in cookie
   };
 
   const getToken = () => {
-    if (token.value) {
-      return token.value;
-    }
-    if (process.client) {
-      const storedToken = localStorage.getItem('authToken');
-      if (storedToken) {
-        token.value = storedToken;
-        return storedToken;
-      }
-    }
-    return null;
+    return authTokenCookie.value;
   };
 
   const removeToken = () => {
     token.value = null;
-    if (process.client) {
-      localStorage.removeItem('authToken');
-    }
+    authTokenCookie.value = null; // Remove from cookie
   };
 
-  // Initialize token from localStorage on setup
-  if (process.client) {
-    getToken();
-  }
+  // No need for explicit initialization from localStorage as useCookie handles it
 
   return {
     token,
