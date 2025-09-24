@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   srcDir: "src/",
+  serverDir: "src/server",
   css: ["~/assets/css/main.css"],
   app: {
     head: {
@@ -24,4 +25,5 @@ export default defineNuxtConfig({
       tailwindcss(),
     ],
   },
+  modules: ["@prisma/nuxt"],
 });

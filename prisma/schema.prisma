@@ -13,6 +13,4 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// @ts-ignore
-/// import ./models/User.prisma
-/// import ./models/Project.prisma
+
