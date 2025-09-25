@@ -19,7 +19,7 @@
                   class="w-64 h-64 rounded-sm object-cover border-2 border-blue-400 shadow-md"
                 >
                 <div class="level-badge absolute -bottom-3 -right-3 bg-blue-500 text-white px-4 py-2 rounded-sm text-xl font-bold border-2 border-blue-300 shadow-md font-outfit">
-                  LVL {{ aboutMeData.level }}
+                  Lv {{ aboutMeData.level }}
                 </div>
               </div>
               <h3 class="text-3xl font-bold mb-2 text-yellow-300 font-outfit">{{ aboutMeData.name }}</h3>
