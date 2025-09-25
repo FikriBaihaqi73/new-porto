@@ -12,6 +12,9 @@
         <li class="mb-2">
           <NuxtLink to="/admin/users" class="block hover:bg-gray-700 p-2 rounded">Users</NuxtLink>
         </li>
+        <li class="mb-2">
+          <NuxtLink to="/admin/about" class="block hover:bg-gray-700 p-2 rounded">About Me</NuxtLink>
+        </li>
         <!-- Add more navigation links here -->
       </ul>
     </nav>
