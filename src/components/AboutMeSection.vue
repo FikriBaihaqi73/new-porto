@@ -160,7 +160,7 @@
           });
           html += '</div>';
           return html;
-        }
+          }
         },
         radar: {
           nameGap: 35, // Increased gap to provide more space for labels

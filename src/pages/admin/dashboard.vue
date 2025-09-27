@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-screen bg-gray-100">
+  <div class="flex min-h-screen bg-gradient-to-br from-[#0f0f1c] to-[#1a1a2e] text-white">
     <!-- Sidebar -->
     <Sidebar />
 
@@ -9,11 +9,11 @@
       <Header />
 
       <!-- Page content -->
-      <main class="flex-1 p-4">
-        <div class="container mx-auto">
-          <h1 class="text-3xl font-bold mb-4">Admin Dashboard</h1>
-          <p v-if="userMessage">{{ userMessage }}</p>
-          <p v-else>Loading admin data...</p>
+      <main class="flex-1 p-6">
+        <div class="container mx-auto bg-[#1f2937]/80 p-8 rounded-lg shadow-xl border border-blue-700/50 backdrop-filter backdrop-blur-sm">
+          <h1 class="text-4xl font-bold mb-6 text-blue-400">Admin Dashboard</h1>
+          <p v-if="userMessage" class="text-teal-300 text-lg">{{ userMessage }}</p>
+          <p v-else class="text-gray-400 text-lg">Loading admin data...</p>
           <!-- The logout button here is redundant as it's in the Header now -->
           <!-- <button @click="logout" class="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Logout</button> -->
         </div>

@@ -1,13 +1,12 @@
 <template>
-  <header class="bg-white shadow p-4 flex justify-between items-center">
-    <div class="text-xl font-semibold">Dashboard Header</div>
+  <header class="bg-gradient-to-br from-[#1a1a2e] to-[#0f0f1c] shadow-lg p-4 flex justify-between items-center border-b border-blue-700 shadow-blue-900/40 relative z-10">
+    <div class="text-xl font-semibold text-blue-400">Admin Panel</div>
     <nav>
       <ul class="flex space-x-4">
         <li>
-          <NuxtLink to="#" class="text-gray-600 hover:text-gray-900">Settings</NuxtLink>
-        </li>
-        <li>
-          <button @click="logout" class="text-gray-600 hover:text-gray-900">Logout</button>
+          <button @click="logout" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg shadow-red-500/30">
+            Logout
+          </button>
         </li>
       </ul>
     </nav>

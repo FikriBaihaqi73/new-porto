@@ -13,6 +13,7 @@ export default defineEventHandler(async (event) => {
     /^\/projects(\/?)$/,
     /^\/projects\/[^/]+(\/?)$/,
     /^\/api\/auth\/login(\/?)$/,
+    /^\/api\/about(\/?)$/,
     /^\/login(\/?)$/,
   ];
 

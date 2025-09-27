@@ -12,8 +12,10 @@
         </div>
       </div>
 
-      <!-- Projects Three-Column Layout -->
-      <div class="projects-stack-container">
+      <div v-if="loadingProjects" class="text-center text-blue-300 text-lg">Loading featured projects...</div>
+      <div v-else-if="projectsError" class="text-center text-red-500 text-lg">{{ projectsError }}</div>
+      <div v-else-if="!projects.length" class="text-center text-gray-400 text-lg">No featured projects found.</div>
+      <div v-else class="projects-stack-container">
         <!-- Left Side Projects -->
         <div class="side-projects left-projects">
           <div 
@@ -50,7 +52,7 @@
         </div>
 
         <!-- Main Project Card - Center -->
-        <div class="main-project-display" ref="mainProjectDisplay">
+        <div class="main-project-display" ref="mainProjectDisplay" v-if="currentProject">
           <div class="bg-gray-800 border-2 border-blue-500 rounded-xl shadow-2xl overflow-hidden transform transition-all duration-300 hover:scale-[1.02] hover:shadow-blue-500/20">
             <!-- Window Header -->
             <div class="flex items-center justify-between p-4 border-b border-blue-600 bg-gray-900">
@@ -63,7 +65,7 @@
                 <span class="text-blue-300 font-mono text-sm">PROJECT_{{ String(currentIndex + 1).padStart(3, '0') }}.exe</span>
               </div>
               <div class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">
-                {{ currentProject.status }}
+                {{ currentProject?.status }}
               </div>
             </div>
 
@@ -72,26 +74,26 @@
               <!-- Project Image -->
               <div class="mb-6 relative">
                 <img 
-                  :src="currentProject.image" 
-                  :alt="currentProject.title"
+                  :src="currentProject?.image" 
+                  :alt="currentProject?.title"
                   class="w-full h-48 object-cover rounded-lg border border-blue-400 shadow-lg"
                 >
                 <div class="absolute top-3 right-3 bg-black/80 text-blue-300 px-3 py-1 rounded text-xs font-mono">
-                  {{ currentProject.type }}
+                  {{ currentProject?.type }}
                 </div>
               </div>
 
               <!-- Project Info -->
               <div class="space-y-4">
-                <h3 class="text-3xl font-bold text-yellow-300">{{ currentProject.title }}</h3>
-                <p class="text-gray-300 text-sm leading-relaxed">{{ currentProject.description }}</p>
+                <h3 class="text-3xl font-bold text-yellow-300">{{ currentProject?.title }}</h3>
+                <p class="text-gray-300 text-sm leading-relaxed">{{ currentProject?.description }}</p>
                 
                 <!-- Tech Stack -->
                 <div>
                   <h4 class="text-blue-300 font-semibold text-sm mb-2">TECH STACK:</h4>
                   <div class="flex flex-wrap gap-2">
                     <span 
-                      v-for="tech in currentProject.techStack" 
+                      v-for="tech in currentProject?.techStack" 
                       :key="tech"
                       class="bg-blue-700 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-mono transition-colors cursor-pointer"
                     >
@@ -104,12 +106,12 @@
                 <div>
                   <div class="flex justify-between text-xs mb-2">
                     <span class="text-blue-300 font-mono">PROGRESS</span>
-                    <span class="text-green-400 font-mono font-bold">{{ currentProject.progress }}%</span>
+                    <span class="text-green-400 font-mono font-bold">{{ currentProject?.progress }}%</span>
                   </div>
                   <div class="w-full bg-gray-700 rounded-full h-3 border border-blue-600 overflow-hidden">
                     <div 
                       class="bg-gradient-to-r from-blue-500 to-green-400 h-full rounded-full transition-all duration-1000 relative"
-                      :style="{ width: currentProject.progress + '%' }"
+                      :style="{ width: currentProject?.progress + '%' }"
                     >
                       <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
                     </div>
@@ -119,19 +121,33 @@
                 <!-- Action Buttons -->
                 <div class="flex gap-4 pt-2">
                   <a 
-                    :href="currentProject.liveUrl" 
+                    v-if="currentProject?.liveUrl"
+                    :href="currentProject?.liveUrl"
                     target="_blank"
                     class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-center transition-all duration-200 transform hover:scale-105 hover:shadow-lg"
                   >
                     [ VIEW LIVE ]
                   </a>
+                  <span
+                    v-else
+                    class="flex-1 bg-gray-600 text-gray-400 font-bold py-3 px-6 rounded-lg text-center cursor-not-allowed opacity-70"
+                  >
+                    [ NO LIVE LINK ]
+                  </span>
                   <a 
-                    :href="currentProject.githubUrl" 
+                    v-if="currentProject?.githubUrl"
+                    :href="currentProject?.githubUrl"
                     target="_blank"
                     class="flex-1 border-2 border-blue-500 hover:border-blue-400 hover:bg-blue-500/10 text-blue-300 hover:text-blue-200 font-bold py-3 px-6 rounded-lg text-center transition-all duration-200 transform hover:scale-105"
                   >
                     [ SOURCE ]
                   </a>
+                  <span
+                    v-else
+                    class="flex-1 border-2 border-gray-500 text-gray-400 font-bold py-3 px-6 rounded-lg text-center cursor-not-allowed opacity-70"
+                  >
+                    [ NO SOURCE LINK ]
+                  </span>
                 </div>
               </div>
             </div>
@@ -175,7 +191,7 @@
       </div>
 
       <!-- Navigation Controls -->
-      <div class="flex flex-col items-center mt-8 space-y-4">
+      <div v-if="!loadingProjects && !projectsError && projects.length" class="flex flex-col items-center mt-8 space-y-4">
         <!-- Mobile Navigation Controls -->
         <div class="md:hidden">
           <!-- Indicators for Mobile -->
@@ -231,105 +247,76 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import gsap from 'gsap'
 import { Observer } from 'gsap/Observer'
 import MagicalCircuitBackground from './MagicalCircuitBackground.vue'
 
-const mainProjectDisplay = ref(null);
+const mainProjectDisplay = ref<HTMLElement | null>(null);
 const previewStack = ref(null);
 const currentIndex = ref(0);
 
 let isTransitioning = false;
-let projectsVisited = new Set();
-let animationTimeline = null;
+let projectsVisited = new Set<number>();
+let animationTimeline: gsap.core.Timeline | null = null;
+
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  type: string;
+  status: string;
+  progress: number;
+  techStack: string[];
+  liveUrl: string | null;
+  githubUrl: string | null;
+  featured: boolean;
+}
 
 // Computed property for current project
-const currentProject = computed(() => projects.value[currentIndex.value]);
+const currentProject = computed<Project | null>(() => projects.value[currentIndex.value] || null);
 
-// Sample projects data - hybrid approach with featured projects
-const projects = ref([
-  {
-    id: 1,
-    title: "E-Commerce Platform",
-    description: "Full-stack e-commerce solution with advanced features including real-time inventory, payment integration, and admin dashboard.",
-    image: "https://via.placeholder.com/400x200/1e40af/ffffff?text=E-Commerce+Platform",
-    type: "WEB APP",
-    status: "COMPLETE",
-    progress: 100,
-    techStack: ["Vue.js", "Node.js", "MongoDB", "Stripe API"],
-    liveUrl: "#",
-    githubUrl: "#",
-    featured: true
-  },
-  {
-    id: 2,
-    title: "AI Chat Bot",
-    description: "Intelligent chatbot with natural language processing capabilities for customer support and automated responses.",
-    image: "https://via.placeholder.com/400x200/7c3aed/ffffff?text=AI+ChatBot",
-    type: "AI/ML",
-    status: "BETA",
-    progress: 70,
-    techStack: ["Python", "TensorFlow", "FastAPI", "OpenAI"],
-    liveUrl: "#",
-    githubUrl: "#",
-    featured: true
-  },
-  {
-    id: 3,
-    title: "Mobile Fitness App",
-    description: "Cross-platform mobile application for fitness tracking, workout plans, and health monitoring with wearable integration.",
-    image: "https://via.placeholder.com/400x200/dc2626/ffffff?text=Fitness+App",
-    type: "MOBILE",
-    status: "DEV",
-    progress: 45,
-    techStack: ["React Native", "Firebase", "Redux", "Health Kit"],
-    liveUrl: "#",
-    githubUrl: "#",
-    featured: true
-  },
-  {
-    id: 4,
-    title: "Task Management System",
-    description: "Comprehensive project management tool with team collaboration, real-time updates, and advanced analytics dashboard.",
-    image: "https://via.placeholder.com/400x200/059669/ffffff?text=Task+Manager",
-    type: "PRODUCTIVITY",
-    status: "ACTIVE",
-    progress: 85,
-    techStack: ["React", "Express", "PostgreSQL", "Socket.io"],
-    liveUrl: "#",
-    githubUrl: "#",
-    featured: true
-  },
-  {
-    id: 5,
-    title: "Digital Portfolio",
-    description: "Modern portfolio website with interactive animations, responsive design, and dynamic content management system.",
-    image: "https://via.placeholder.com/400x200/7c2d12/ffffff?text=Portfolio+Site",
-    type: "PORTFOLIO",
-    status: "LIVE",
-    progress: 95,
-    techStack: ["Nuxt.js", "TailwindCSS", "GSAP", "Netlify"],
-    liveUrl: "#",
-    githubUrl: "#",
-    featured: true
+// Projects data
+const projects = ref<Project[]>([]);
+const totalProjectsCount = ref(0);
+const loadingProjects = ref(true);
+const projectsError = ref<string | null>(null);
+
+// Fetch projects from API
+const fetchProjects = async () => {
+  loadingProjects.value = true;
+  projectsError.value = null;
+  try {
+    const response = await $fetch<{ status: number; data: Project[]; message?: string }>('/api/projects?featured=true');
+    if (response.status === 200 && response.data) {
+      projects.value = response.data;
+      totalProjectsCount.value = response.data.length;
+      if (response.data.length > 0) {
+        projectsVisited.add(0); // Mark first project as visited if there are projects
+      }
+    } else {
+      projectsError.value = response.message || 'Failed to fetch projects';
+    }
+  } catch (err: any) {
+    projectsError.value = err.data?.statusMessage || err.message || 'Error fetching projects';
+    console.error("Error fetching projects:", err);
+  } finally {
+    loadingProjects.value = false;
   }
-]);
-
-// Additional projects count for hybrid display
-const totalProjectsCount = ref(12); // Total projects including non-featured
+};
 
 // Get preview card style - simplified for clean layout
-const getPreviewCardStyle = (index) => {
+const getPreviewCardStyle = (index: number) => {
   return {
     // No complex transforms - using clean CSS classes instead
   };
 };
 
 // Select a specific project with simple mobile-friendly transition
-const selectProject = (index) => {
-  if (index === currentIndex.value || isTransitioning) return;
+const selectProject = (index: number) => {
+  if (projects.value.length === 0 || index === currentIndex.value || isTransitioning) return;
   
   // Check if mobile device
   const isMobile = window.innerWidth <= 768;
@@ -371,7 +358,7 @@ const selectProject = (index) => {
     .call(() => {
       projectsVisited.add(index);
       currentIndex.value = index;
-    }, null, 0.1)
+    }, undefined, 0.1)
     .to(mainCard, {
       opacity: 1,
       scale: 1,
@@ -391,10 +378,12 @@ const updatePreviewStack = () => {
 };
 
 // Navigate projects with mobile-aware animation
-const slideProjects = (direction) => {
+const slideProjects = (direction: 'prev' | 'next') => {
+  if (projects.value.length === 0 || isTransitioning) return;
+
   const isMobile = window.innerWidth <= 768;
   
-  if (isMobile || isTransitioning) {
+  if (isMobile) {
     // Simple direct navigation for mobile
     const totalProjects = projects.value.length;
     let newIndex;
@@ -424,70 +413,53 @@ const slideProjects = (direction) => {
 };
 
 // Get projects for left side (previous projects)
-const getLeftProjects = () => {
+const getLeftProjects = (): Project[] => {
+  if (projects.value.length === 0) return [];
   const total = projects.value.length;
-  const leftProjects = [];
+  const leftProjects: Project[] = [];
   
   // Get 2 projects before current (or wrap around)
   for (let i = 1; i <= 2; i++) {
     const index = (currentIndex.value - i + total) % total;
-    leftProjects.unshift(projects.value[index]);
+    const project = projects.value[index];
+    if (project) {
+      leftProjects.unshift(project);
+    }
   }
   
   return leftProjects;
 };
 
 // Get projects for right side (next projects)
-const getRightProjects = () => {
+const getRightProjects = (): Project[] => {
+  if (projects.value.length === 0) return [];
   const total = projects.value.length;
-  const rightProjects = [];
+  const rightProjects: Project[] = [];
   
   // Get 2 projects after current (or wrap around)
   for (let i = 1; i <= 2; i++) {
     const index = (currentIndex.value + i) % total;
-    rightProjects.push(projects.value[index]);
+    const project = projects.value[index];
+    if (project) {
+      rightProjects.push(project);
+    }
   }
   
   return rightProjects;
 };
 
 // Get original index of project by ID
-const getOriginalIndex = (projectId) => {
+const getOriginalIndex = (projectId: string): number => {
   return projects.value.findIndex(p => p.id === projectId);
 };
 
 // No scroll blocking - user can navigate freely with clicks and buttons
 
 onMounted(() => {
-  // Mark first project as visited
-  projectsVisited.add(0);
+  fetchProjects(); // Fetch projects when the component is mounted
+  // No need to mark first project as visited here; it's handled in fetchProjects
   
-  // Check if mobile device
-  const isMobile = window.innerWidth <= 768;
-  
-  if (!isMobile) {
-    // Only add entrance animations on desktop
-    gsap.set('.main-project-display', { scale: 0.9, opacity: 0 });
-    gsap.set('.side-project-card', { scale: 0.9, opacity: 0 });
-    
-    // Simple entrance animation
-    gsap.to('.main-project-display', {
-      scale: 1,
-      opacity: 1,
-      duration: 0.6,
-      ease: 'power2.out'
-    });
-    
-    gsap.to('.side-project-card', {
-      scale: 1,
-      opacity: 1,
-      duration: 0.6,
-      stagger: 0.1,
-      ease: 'power2.out',
-      delay: 0.2
-    });
-  }
-  // Mobile: Elements are visible immediately without animation
+  // Removed GSAP entrance animations, as loading state handles initial visibility
 });
 
 onUnmounted(() => {
