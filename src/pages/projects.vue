@@ -70,8 +70,17 @@
           </button>
         </div>
 
+        <!-- Loading / Error States -->
+        <div v-if="loadingProjects" class="text-center text-blue-300 text-lg py-12">Loading projects...</div>
+        <div v-else-if="projectsError" class="text-center text-red-500 text-lg py-12">{{ projectsError }}</div>
+        <div v-else-if="allProjects.length === 0" class="text-center py-12">
+          <div class="text-6xl mb-4">🚧</div>
+          <h3 class="text-xl font-bold text-gray-400 mb-2">Tidak ada proyek yang tersedia.</h3>
+          <p class="text-gray-500">Coba buat beberapa di dashboard admin.</p>
+        </div>
+
         <!-- Projects Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div 
             v-for="project in filteredProjects" 
             :key="project.id"
@@ -150,19 +159,33 @@
               <div class="space-y-2">
                 <div class="flex gap-2">
                   <a 
-                    :href="project.liveUrl" 
+                    v-if="project.liveUrl"
+                    :href="project.liveUrl!"
                     target="_blank"
                     class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-4 rounded font-bold text-sm transition-all duration-200"
                   >
                     LIVE
                   </a>
+                  <span
+                    v-else
+                    class="flex-1 bg-gray-600 text-gray-400 text-center py-2 px-4 rounded font-bold text-sm cursor-not-allowed opacity-70"
+                  >
+                    NO LIVE LINK
+                  </span>
                   <a 
-                    :href="project.githubUrl" 
+                    v-if="project.githubUrl"
+                    :href="project.githubUrl!"
                     target="_blank"
                     class="flex-1 border border-blue-500 hover:bg-blue-500/10 text-blue-300 text-center py-2 px-4 rounded font-bold text-sm transition-all duration-200"
                   >
                     CODE
                   </a>
+                  <span
+                    v-else
+                    class="flex-1 border border-gray-500 text-gray-400 text-center py-2 px-4 rounded font-bold text-sm cursor-not-allowed opacity-70"
+                  >
+                    NO CODE LINK
+                  </span>
                 </div>
                 <NuxtLink 
                   :to="`/projects/${project.id}`"
@@ -176,14 +199,14 @@
         </div>
 
         <!-- Empty State -->
-        <div v-if="filteredProjects.length === 0" class="text-center py-12">
+        <div v-if="!loadingProjects && !projectsError && filteredProjects.length === 0" class="text-center py-12">
           <div class="text-6xl mb-4">🔍</div>
           <h3 class="text-xl font-bold text-gray-400 mb-2">Tidak ada proyek ditemukan</h3>
           <p class="text-gray-500">Coba ubah filter untuk melihat proyek lainnya</p>
         </div>
         
         <!-- Pagination -->
-        <div v-if="totalPages > 1" class="flex flex-col items-center mt-12 space-y-4">
+        <div v-if="!loadingProjects && !projectsError && totalPages > 1" class="flex flex-col items-center mt-12 space-y-4">
           <!-- Pagination Info -->
           <div class="text-center">
             <p class="text-gray-400 text-sm font-mono">
@@ -276,8 +299,8 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed } from 'vue'
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
 import DynamicNavbar from '../components/DynamicNavbar.vue'
 import MagicalCircuitBackground from '../components/MagicalCircuitBackground.vue'
 
@@ -289,195 +312,68 @@ useHead({
   ]
 })
 
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  type: string;
+  status: string;
+  progress: number;
+  techStack: string[];
+  liveUrl: string | null;
+  githubUrl: string | null;
+  featured: boolean;
+}
+
 const selectedFilter = ref('all')
 const currentPage = ref(1)
 const itemsPerPage = 6
 
-// All projects data (expanded from featured projects)
-const allProjects = ref([
-  // Featured projects (from home page)
-  {
-    id: 1,
-    title: "E-Commerce Platform",
-    description: "Full-stack e-commerce solution with advanced features including real-time inventory, payment integration, and admin dashboard. Built with modern technologies and scalable architecture.",
-    image: "https://via.placeholder.com/400x200/1e40af/ffffff?text=E-Commerce+Platform",
-    type: "WEB APP",
-    status: "COMPLETE",
-    progress: 100,
-    techStack: ["Vue.js", "Node.js", "MongoDB", "Stripe API", "Redis", "Docker"],
-    liveUrl: "#",
-    githubUrl: "#",
-    featured: true
-  },
-  {
-    id: 2,
-    title: "AI Chat Bot",
-    description: "Intelligent chatbot with natural language processing capabilities for customer support and automated responses. Integrates with multiple platforms and provides analytics.",
-    image: "https://via.placeholder.com/400x200/7c3aed/ffffff?text=AI+ChatBot",
-    type: "AI/ML",
-    status: "BETA",
-    progress: 70,
-    techStack: ["Python", "TensorFlow", "FastAPI", "OpenAI", "Redis", "PostgreSQL"],
-    liveUrl: "#",
-    githubUrl: "#",
-    featured: true
-  },
-  {
-    id: 3,
-    title: "Mobile Fitness App",
-    description: "Cross-platform mobile application for fitness tracking, workout plans, and health monitoring with wearable integration. Features social sharing and AI-powered recommendations.",
-    image: "https://via.placeholder.com/400x200/dc2626/ffffff?text=Fitness+App",
-    type: "MOBILE",
-    status: "DEV",
-    progress: 45,
-    techStack: ["React Native", "Firebase", "Redux", "Health Kit", "GraphQL"],
-    liveUrl: "#",
-    githubUrl: "#",
-    featured: true
-  },
-  
-  // Additional non-featured projects
-  {
-    id: 4,
-    title: "Task Management System",
-    description: "Collaborative task management platform with team features, time tracking, and project analytics. Designed for remote teams and agile workflows.",
-    image: "https://via.placeholder.com/400x200/059669/ffffff?text=Task+Manager",
-    type: "WEB APP",
-    status: "COMPLETE",
-    progress: 100,
-    techStack: ["React", "Express.js", "PostgreSQL", "Socket.io"],
-    liveUrl: "#",
-    githubUrl: "#",
-    featured: false
-  },
-  {
-    id: 5,
-    title: "Weather Dashboard",
-    description: "Real-time weather monitoring dashboard with data visualization, forecasting, and alert systems. Integrates multiple weather APIs for accuracy.",
-    image: "https://via.placeholder.com/400x200/0891b2/ffffff?text=Weather+Dashboard",
-    type: "WEB APP",
-    status: "COMPLETE",
-    progress: 100,
-    techStack: ["Vue.js", "Chart.js", "Node.js", "Weather API"],
-    liveUrl: "#",
-    githubUrl: "#",
-    featured: false
-  },
-  {
-    id: 6,
-    title: "Inventory Management",
-    description: "Comprehensive inventory tracking system for small to medium businesses. Features barcode scanning, automated reordering, and reporting.",
-    image: "https://via.placeholder.com/400x200/7c2d12/ffffff?text=Inventory+System",
-    type: "WEB APP",
-    status: "DEV",
-    progress: 60,
-    techStack: ["Laravel", "MySQL", "Bootstrap", "jQuery"],
-    liveUrl: "#",
-    githubUrl: "#",
-    featured: false
-  },
-  {
-    id: 7,
-    title: "Social Media Analytics",
-    description: "Analytics platform for social media performance tracking across multiple platforms. Provides insights, scheduling, and engagement metrics.",
-    image: "https://via.placeholder.com/400x200/be185d/ffffff?text=Social+Analytics",
-    type: "WEB APP",
-    status: "BETA",
-    progress: 80,
-    techStack: ["Python", "Django", "Celery", "Redis", "D3.js"],
-    liveUrl: "#",
-    githubUrl: "#",
-    featured: false
-  },
-  {
-    id: 8,
-    title: "Learning Management System",
-    description: "Educational platform for online courses, student progress tracking, and interactive learning modules. Supports multimedia content and assessments.",
-    image: "https://via.placeholder.com/400x200/4338ca/ffffff?text=LMS+Platform",
-    type: "WEB APP",
-    status: "DEV",
-    progress: 35,
-    techStack: ["Next.js", "Prisma", "PostgreSQL", "Tailwind CSS"],
-    liveUrl: "#",
-    githubUrl: "#",
-    featured: false
-  },
-  {
-    id: 9,
-    title: "Portfolio Website",
-    description: "Personal portfolio website showcasing projects, skills, and experience. Features responsive design, animations, and contact integration.",
-    image: "https://via.placeholder.com/400x200/166534/ffffff?text=Portfolio+Site",
-    type: "WEB APP",
-    status: "COMPLETE",
-    progress: 100,
-    techStack: ["Nuxt.js", "GSAP", "Tailwind CSS", "Netlify"],
-    liveUrl: "#",
-    githubUrl: "#",
-    featured: false
-  },
-  {
-    id: 10,
-    title: "Restaurant POS System",
-    description: "Point of sale system for restaurants with order management, inventory tracking, and payment processing. Includes kitchen display and reporting.",
-    image: "https://via.placeholder.com/400x200/dc2626/ffffff?text=POS+System",
-    type: "WEB APP",
-    status: "DEV",
-    progress: 25,
-    techStack: ["Vue.js", "Node.js", "MongoDB", "Stripe"],
-    liveUrl: "#",
-    githubUrl: "#",
-    featured: false
-  },
-  {
-    id: 11,
-    title: "Data Visualization Tool",
-    description: "Interactive data visualization platform for business intelligence. Supports multiple data sources and customizable dashboards.",
-    image: "https://via.placeholder.com/400x200/7c3aed/ffffff?text=Data+Viz+Tool",
-    type: "WEB APP",
-    status: "BETA",
-    progress: 75,
-    techStack: ["React", "D3.js", "Python", "Flask", "PostgreSQL"],
-    liveUrl: "#",
-    githubUrl: "#",
-    featured: false
-  },
-  {
-    id: 12,
-    title: "IoT Device Monitor",
-    description: "Real-time monitoring system for IoT devices with alerting, data logging, and remote control capabilities. Supports various sensor types.",
-    image: "https://via.placeholder.com/400x200/059669/ffffff?text=IoT+Monitor",
-    type: "IOT",
-    status: "DEV",
-    progress: 40,
-    techStack: ["Python", "MQTT", "InfluxDB", "Grafana", "Raspberry Pi"],
-    liveUrl: "#",
-    githubUrl: "#",
-    featured: false
+const allProjects = ref<Project[]>([]);
+const loadingProjects = ref(true);
+const projectsError = ref<string | null>(null);
+
+const fetchAllProjects = async () => {
+  loadingProjects.value = true;
+  projectsError.value = null;
+  try {
+    const response = await $fetch<{ status: number; data: Project[]; message?: string }>('/api/projects');
+    if (response.status === 200 && response.data) {
+      allProjects.value = response.data;
+    } else {
+      projectsError.value = response.message || 'Failed to fetch all projects';
+    }
+  } catch (err: any) {
+    projectsError.value = err.data?.statusMessage || err.message || 'Error fetching all projects';
+    console.error("Error fetching all projects:", err);
+  } finally {
+    loadingProjects.value = false;
   }
-])
+};
 
 // Filter methods
-const filterByStatus = (status) => {
+const filterByStatus = (status: string) => {
   selectedFilter.value = status
   currentPage.value = 1 // Reset to first page when filtering
 }
 
-const getProjectsByStatus = (status) => {
+const getProjectsByStatus = (status: string) => {
   return allProjects.value.filter(project => project.status === status)
 }
 
 const filteredProjects = computed(() => {
-  let projects = []
+  let projectsToPaginate: Project[] = []
   if (selectedFilter.value === 'all') {
-    projects = allProjects.value
+    projectsToPaginate = allProjects.value
   } else {
-    projects = getProjectsByStatus(selectedFilter.value)
+    projectsToPaginate = getProjectsByStatus(selectedFilter.value)
   }
   
   // Apply pagination
   const startIndex = (currentPage.value - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  return projects.slice(startIndex, endIndex)
+  return projectsToPaginate.slice(startIndex, endIndex)
 })
 
 const totalFilteredProjects = computed(() => {
@@ -494,7 +390,7 @@ const totalPages = computed(() => {
 const canGoPrev = computed(() => currentPage.value > 1)
 const canGoNext = computed(() => currentPage.value < totalPages.value)
 
-const goToPage = (page) => {
+const goToPage = (page: number) => {
   if (page >= 1 && page <= totalPages.value) {
     currentPage.value = page
     // Scroll to top of projects grid
@@ -513,6 +409,10 @@ const goToNextPage = () => {
     goToPage(currentPage.value + 1)
   }
 }
+
+onMounted(() => {
+  fetchAllProjects();
+})
 </script>
 
 <style scoped>

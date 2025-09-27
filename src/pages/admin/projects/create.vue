@@ -18,7 +18,11 @@
             </div>
             <div>
               <label for="status" class="block text-teal-300 text-sm font-bold mb-2">Status:</label>
-              <input type="text" id="status" v-model="form.status" class="shadow-sm bg-gray-700 appearance-none border border-blue-500 rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+              <select id="status" v-model="form.status" class="shadow-sm bg-gray-700 appearance-none border border-blue-500 rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+                <option value="COMPLETE">COMPLETE</option>
+                <option value="DEV">DEV</option>
+                <option value="BETA">BETA</option>
+              </select>
             </div>
             <div>
               <label for="progress" class="block text-teal-300 text-sm font-bold mb-2">Progress (%):</label>
