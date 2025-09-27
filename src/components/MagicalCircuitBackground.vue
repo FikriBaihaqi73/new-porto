@@ -48,7 +48,9 @@ const initCircuit = () => {
   animate()
   
   // Handle window resize
-  window.addEventListener('resize', resizeCanvas)
+  if (process.client) {
+    window.addEventListener('resize', resizeCanvas)
+  }
 }
 
 // Resize canvas to fit container
@@ -254,7 +256,9 @@ const cleanup = () => {
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId)
   }
-  window.removeEventListener('resize', resizeCanvas)
+  if (process.client) {
+    window.removeEventListener('resize', resizeCanvas)
+  }
 }
 
 // Lifecycle

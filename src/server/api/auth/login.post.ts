@@ -1,7 +1,7 @@
 import { defineEventHandler, readBody } from 'h3';
 import bcrypt from 'bcrypt';
 import jwt, { type SignOptions } from 'jsonwebtoken';
-import prisma from '~/lib/prisma'
+import prisma from '~/server/utils/prisma'
 // Optional: if using Prisma Accelerate
 // import { withAccelerate } from "@prisma/extension-accelerate";
 

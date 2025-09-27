@@ -1,0 +1,16 @@
+model Experience {
+  id              String    @id @default(uuid())
+  companyName     String
+  jobTitle        String
+  location        String
+  startDate       DateTime
+  endDate         DateTime? // Nullable for current job
+  status          String    // e.g., "COMPLETE", "ACTIVE"
+  duration        String    // e.g., "2 Years", "6 Months"
+  mainAchievement String
+  skillsAcquired  Json      // Storing skills as a JSON array of strings
+  projectsCount   Int       @default(0)
+  logoUrl         String?   // Optional URL for company logo
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}

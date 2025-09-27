@@ -50,7 +50,7 @@
   };
   
   const resizeCanvas = () => {
-    if (!canvas) return;
+    if (!canvas || typeof window === 'undefined') return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     
@@ -78,6 +78,7 @@
       this.x += this.speedX;
       this.y += this.speedY;
   
+      if (!canvas) return; // Guard for SSR
       if (this.x + this.size > canvas.width || this.x - this.size < 0) this.speedX *= -1;
       if (this.y + this.size > canvas.height || this.y - this.size < 0) this.speedY *= -1;
   
@@ -107,6 +108,7 @@
     }
   
     draw() {
+      if (!ctx) return; // Guard for SSR
       ctx.fillStyle = this.color;
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
@@ -230,10 +232,10 @@
     let scrollDirection = 'down';
     
     scrollObserver = Observer.create({
-      target: window,
+      target: typeof window !== 'undefined' ? window : null,
       type: 'scroll,touch',
       onChangeY: (self) => {
-        if (isTransitioning) return;
+        if (isTransitioning || typeof window === 'undefined') return;
         
         const currentScrollY = window.scrollY;
         scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
@@ -276,7 +278,7 @@
         }
         
         // Check if we're scrolling back up to hero section with faster response
-        else if (scrollDirection === 'up' && heroRect.top > -window.innerHeight * 0.2) { // More responsive threshold
+        else if (scrollDirection === 'up' && heroRect.top > -(window.innerHeight * 0.2)) { // More responsive threshold
           if (heroSection.classList.contains('dissolving')) {
             isTransitioning = true;
             heroSection.classList.remove('dissolving');
@@ -307,11 +309,12 @@
   };
   
   // === Text Animations ===
-  onMounted(() => {
+  
+  const setupClientSideEffects = () => {
     console.log("Component mounted");
     
     // Check if mobile device
-    const isMobile = window.innerWidth <= 768;
+    const isMobile = typeof window !== 'undefined' ? window.innerWidth <= 768 : false;
     
     // Canvas setup (desktop only)
     if (!isMobile) {
@@ -516,6 +519,12 @@
       }, 2000);
   
     }, 100); // Small delay to ensure DOM is ready
+  };
+  
+  onMounted(() => {
+    if (process.client) {
+      setupClientSideEffects();
+    }
   });
   
   onUnmounted(() => {
@@ -527,7 +536,7 @@
     }
     
     // Only remove listeners if they were added (desktop only)
-    if (window.innerWidth > 768) {
+    if (process.client && typeof window !== 'undefined' && window.innerWidth > 768) {
       window.removeEventListener("resize", resizeCanvas);
       window.removeEventListener("mousemove", handleMouseMove);
     }

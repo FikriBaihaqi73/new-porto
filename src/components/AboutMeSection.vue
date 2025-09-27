@@ -104,28 +104,35 @@
     }
   }, { deep: true });
   
-  onMounted(async () => {
-    await fetchAboutMeData(); // Fetch data on mount
+  const setupClientSideChart = () => {
+    if (!radarChart.value || !aboutMeData.value) return;
 
-    const isMobile = window.innerWidth <= 768;
-    
-    // Setup ECharts
-    if (radarChart.value && aboutMeData.value) {
-      chartInstance = echarts.init(radarChart.value);
-      updateChart(aboutMeData.value);
-      
-      const handleResize = () => {
-        chartInstance.resize();
-      };
-      
-      window.addEventListener("resize", handleResize);
-      
-      onUnmounted(() => {
-        window.removeEventListener("resize", handleResize);
-        if (chartInstance) {
-          chartInstance.dispose();
-        }
-      });
+    chartInstance = echarts.init(radarChart.value);
+    updateChart(aboutMeData.value);
+
+    const handleResize = () => {
+      chartInstance.resize();
+      // Re-apply responsive options on resize
+      if (aboutMeData.value) {
+        updateChart(aboutMeData.value);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    onUnmounted(() => {
+      window.removeEventListener("resize", handleResize);
+      if (chartInstance) {
+        chartInstance.dispose();
+      }
+    });
+  };
+
+  onMounted(async () => {
+    await fetchAboutMeData(); // Fetch data on mount, safe for SSR
+
+    if (process.client) {
+      setupClientSideChart();
     }
   });
   
@@ -136,6 +143,9 @@
   });
 
   const updateChart = (data) => {
+    // Check if window is defined before accessing innerWidth
+    const isMobile = typeof window !== 'undefined' ? window.innerWidth <= 768 : false;
+
     const indicator = Object.entries(data.stats).map(([key, stat]) => ({
       name: key.toUpperCase(),
       max: stat.max || 30, // Gunakan stat.max jika ada, default ke 30
@@ -166,13 +176,13 @@
           nameGap: 35, // Increased gap to provide more space for labels
           indicator: indicator,
           center: ["50%", "50%"],
-          radius: window.innerWidth <= 768 ? "45%" : "55%", // Slightly smaller radius to create more space for labels
+          radius: isMobile ? "45%" : "55%", // Use isMobile
           startAngle: 90,
           splitNumber: 5,
           shape: "circle",
           axisName: {
             color: "#93c5fd",
-            fontSize: window.innerWidth <= 768 ? 10 : 13, // Increased font size for readability
+            fontSize: isMobile ? 10 : 13, // Use isMobile
             fontWeight: "bold",
             fontFamily: "Outfit, sans-serif",
             overflow: 'break',
@@ -229,7 +239,7 @@
                   width: 3
                 },
                 symbol: "circle",
-              symbolSize: window.innerWidth <= 768 ? 4 : 6,
+              symbolSize: isMobile ? 4 : 6,
                 itemStyle: {
                   color: "#60a5fa",
                   borderColor: "#1e40af",
@@ -242,7 +252,7 @@
                   },
                   color: "#fff",
                   fontWeight: "bold",
-                fontSize: window.innerWidth <= 768 ? 8 : 10,
+                fontSize: isMobile ? 8 : 10,
                   fontFamily: "Outfit, sans-serif"
                 }
               },

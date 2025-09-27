@@ -100,16 +100,20 @@ const toggleNavbar = () => {
   isExpanded.value = !isExpanded.value
   
   // Prevent body scroll when expanded
-  if (isExpanded.value) {
-    document.body.style.overflow = 'hidden'
-  } else {
-    document.body.style.overflow = ''
+  if (process.client) {
+    if (isExpanded.value) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
   }
 }
 
 const closeNavbar = () => {
   isExpanded.value = false
-  document.body.style.overflow = ''
+  if (process.client) {
+    document.body.style.overflow = ''
+  }
 }
 
 const navigateAndClose = async (event, isPageChange = false) => {
@@ -148,14 +152,16 @@ const navigateAndClose = async (event, isPageChange = false) => {
             const section = document.getElementById(sectionId)
             if (section) {
               // Smooth scroll with GSAP
-              gsap.to(window, {
-                duration: 1.2,
-                scrollTo: {
-                  y: section.offsetTop - 80, // Account for navbar height
-                  autoKill: false
-                },
-                ease: "power2.inOut"
-              })
+              if (process.client) {
+                gsap.to(window, {
+                  duration: 1.2,
+                  scrollTo: {
+                    y: section.offsetTop - 80, // Account for navbar height
+                    autoKill: false
+                  },
+                  ease: "power2.inOut"
+                })
+              }
             }
           }, 200)
         }, 500)
@@ -167,14 +173,16 @@ const navigateAndClose = async (event, isPageChange = false) => {
         
         if (section) {
           // Enhanced smooth scroll with GSAP
-          gsap.to(window, {
-            duration: 1.2,
-            scrollTo: {
-              y: section.offsetTop - 80, // Account for navbar height
-              autoKill: false
-            },
-            ease: "power2.inOut"
-          })
+          if (process.client) {
+            gsap.to(window, {
+              duration: 1.2,
+              scrollTo: {
+                y: section.offsetTop - 80, // Account for navbar height
+                autoKill: false
+              },
+              ease: "power2.inOut"
+            })
+          }
         }
         
         setTimeout(() => {
@@ -257,12 +265,16 @@ const handleKeydown = (event) => {
 }
 
 onMounted(() => {
-  document.addEventListener('keydown', handleKeydown)
+  if (process.client) {
+    document.addEventListener('keydown', handleKeydown)
+  }
 })
 
 onUnmounted(() => {
-  document.removeEventListener('keydown', handleKeydown)
-  document.body.style.overflow = ''
+  if (process.client) {
+    document.removeEventListener('keydown', handleKeydown)
+    document.body.style.overflow = ''
+  }
 })
 </script>
 

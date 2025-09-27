@@ -15,12 +15,14 @@
             About Me
           </NuxtLink>
         </li>
-        <li class="mb-2">
-          <NuxtLink to="/admin/projects" class="flex items-center text-teal-300 hover:text-teal-100 py-2 px-4 rounded-lg transition-colors duration-200 hover:bg-[#1f2937] shadow-blue-900/40 hover:shadow-teal-500/20">
-            <i class="icon-[lucide--folder-git-2] w-5 h-5 mr-3"></i>
-            Projects
-          </NuxtLink>
-        </li>
+        <NuxtLink to="/admin/experience" class="flex items-center text-teal-300 hover:text-teal-100 py-2 px-4 rounded-lg transition-colors duration-200 hover:bg-[#1f2937] shadow-blue-900/40 hover:shadow-teal-500/20">
+          <i class="icon-[lucide--graduation-cap] w-5 h-5 mr-3"></i>
+          Experience
+        </NuxtLink>
+        <NuxtLink to="/admin/projects" class="flex items-center text-teal-300 hover:text-teal-100 py-2 px-4 rounded-lg transition-colors duration-200 hover:bg-[#1f2937] shadow-blue-900/40 hover:shadow-teal-500/20">
+          <i class="icon-[lucide--folder-git-2] w-5 h-5 mr-3"></i>
+          Projects
+        </NuxtLink>
       </ul>
     </nav>
   </aside>

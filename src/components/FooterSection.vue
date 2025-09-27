@@ -176,11 +176,13 @@ const updateUptime = () => {
 
 // Scroll to top function
 const scrollToTop = () => {
-  gsap.to(window, {
-    duration: 1.5,
-    scrollTo: { y: 0 },
-    ease: "power2.inOut"
-  });
+  if (process.client) {
+    gsap.to(window, {
+      duration: 1.5,
+      scrollTo: { y: 0 },
+      ease: "power2.inOut"
+    });
+  }
 };
 
 // Setup scroll observer for scroll-to-top button
@@ -188,6 +190,7 @@ const setupScrollObserver = () => {
   let lastScrollY = 0;
   
   const handleScroll = () => {
+    if (typeof window === 'undefined') return;
     const currentScrollY = window.scrollY;
     const shouldShow = currentScrollY > 500; // Show after scrolling 500px
     
@@ -212,24 +215,28 @@ const setupScrollObserver = () => {
     lastScrollY = currentScrollY;
   };
   
-  window.addEventListener('scroll', handleScroll);
+  if (process.client) {
+    window.addEventListener('scroll', handleScroll);
+  }
   
   return () => {
-    window.removeEventListener('scroll', handleScroll);
+    if (process.client) {
+      window.removeEventListener('scroll', handleScroll);
+    }
   };
 };
 
-onMounted(() => {
+const setupClientSideFooterEffects = () => {
   // Start uptime counter
   startTime = Date.now();
   updateUptime();
   uptimeInterval = setInterval(updateUptime, 1000);
   
   // Setup scroll observer
-  const cleanup = setupScrollObserver();
+  const cleanupScroll = setupScrollObserver();
   
   // Check if mobile device
-  const isMobile = window.innerWidth <= 768;
+  const isMobile = typeof window !== 'undefined' ? window.innerWidth <= 768 : false;
   
   if (!isMobile) {
     // Only add animations on desktop
@@ -321,18 +328,23 @@ onMounted(() => {
   }
   // Mobile: Elements are visible immediately
   
-  // Cleanup function will be called automatically
   onUnmounted(() => {
     if (uptimeInterval) {
       clearInterval(uptimeInterval);
     }
     
-    if (cleanup) {
-      cleanup();
+    if (cleanupScroll) {
+      cleanupScroll();
     }
     
     ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   });
+};
+
+onMounted(() => {
+  if (process.client) {
+    setupClientSideFooterEffects();
+  }
 });
 </script>
 

@@ -319,7 +319,7 @@ const selectProject = (index: number) => {
   if (projects.value.length === 0 || index === currentIndex.value || isTransitioning) return;
   
   // Check if mobile device
-  const isMobile = window.innerWidth <= 768;
+  const isMobile = typeof window !== 'undefined' ? window.innerWidth <= 768 : false;
   
   if (isMobile) {
     // Simple direct update for mobile
@@ -381,7 +381,7 @@ const updatePreviewStack = () => {
 const slideProjects = (direction: 'prev' | 'next') => {
   if (projects.value.length === 0 || isTransitioning) return;
 
-  const isMobile = window.innerWidth <= 768;
+  const isMobile = typeof window !== 'undefined' ? window.innerWidth <= 768 : false;
   
   if (isMobile) {
     // Simple direct navigation for mobile

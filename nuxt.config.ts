@@ -21,9 +21,17 @@ export default defineNuxtConfig({
     '~/plugins/gsap.client.js',
   ],
   vite: {
+    optimizeDeps: {
+      exclude: ['@prisma/client'],
+    },
+    resolve: {
+      alias: {
+        '.prisma/client/runtime/index-browser.js': '~/client-prisma-mock.js',
+        '@prisma/client/runtime/index-browser': '~/client-prisma-mock.js',
+      },
+    },
     plugins: [
       tailwindcss(),
     ],
   },
-  modules: ["@prisma/nuxt"],
 });

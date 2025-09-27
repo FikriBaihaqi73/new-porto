@@ -28,7 +28,7 @@
     console.log(`🌍 Simple navigation: ${direction}`);
     
     // Check if projects section is in control mode
-    if (window.isProjectsBlocked) {
+    if (process.client && window.isProjectsBlocked) {
       console.log('⏸️ Projects section is in control, ignoring global navigation');
       return;
     }
@@ -49,7 +49,9 @@
     console.log('🃏 Card stacking mode - ScrollSmoother disabled');
     
     // Expose minimal navigation functions
-    window.globalNavigation = handleGlobalNavigation;
+    if (process.client) {
+      window.globalNavigation = handleGlobalNavigation;
+    }
     
     // No ScrollTrigger section detection - let projects handle its own navigation
     console.log('📋 Section detection disabled - projects has full control');
@@ -57,7 +59,7 @@
   
   onUnmounted(() => {
     // Cleanup global navigation
-    if (window.globalNavigation) {
+    if (process.client && window.globalNavigation) {
       delete window.globalNavigation;
     }
   });
