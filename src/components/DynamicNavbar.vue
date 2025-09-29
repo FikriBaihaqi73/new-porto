@@ -92,7 +92,9 @@ import gsap from 'gsap'
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 
 // Register GSAP plugins
-gsap.registerPlugin(ScrollToPlugin)
+if (process.client) {
+  gsap.registerPlugin(ScrollToPlugin)
+}
 
 const isExpanded = ref(false)
 
