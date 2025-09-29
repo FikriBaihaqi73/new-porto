@@ -16,7 +16,7 @@
             Lihat Proyek
           </NuxtLink>
           <a
-            href="/resume.pdf"
+            href="https://drive.google.com/file/d/1WR4Dq0el-_uHTK3QQn9ORF8x4C6w-U8T/view?usp=sharing"
             download
             class="inline-block border-2 border-white hover:border-blue-500 text-white font-bold py-3 px-8 rounded-full text-xl transition duration-300 transform hover:scale-105"
           >
