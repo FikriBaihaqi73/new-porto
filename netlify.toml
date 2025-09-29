@@ -1,0 +1,14 @@
+# netlify.toml di root proyek Anda
+
+[build]
+  command = "npm run build" # atau yarn build
+  publish = "dist" # direktori output build Nuxt
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/server" # Ini mengarahkan semua rute ke fungsi serverless Nuxt
+  status = 200
+
+[functions]
+  node_bundler = "esbuild" # Direkomendasikan untuk kinerja
+  external_node_modules = ["@prisma/client"] # Pastikan Prisma ditangani dengan benar
