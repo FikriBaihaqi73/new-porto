@@ -8,6 +8,10 @@ declare module 'h3' {
 }
 
 export default defineEventHandler(async (event) => {
+  // Explicitly allow root path to bypass authentication
+  if (event.path === '/') {
+    return;
+  }
   const publicRouteRegexes = [
     /^\/$/,
     /^\/login(\/?)$/,
