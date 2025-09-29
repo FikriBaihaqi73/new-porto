@@ -9,11 +9,10 @@ declare module 'h3' {
 
 export default defineEventHandler(async (event) => {
   const publicRouteRegexes = [
-    '/',
-    '/login',
-    '/admin',
-    '/admin/login',
     /^\/$/,
+    /^\/login(\/?)$/,
+    /^\/admin(\/?)$/,
+    /^\/admin\/login(\/?)$/,
     /^\/projects(\/?)$/,
     /^\/projects\/[^/]+(\/?)$/,
     /^\/api\/auth\/login(\/?)$/,
