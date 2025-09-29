@@ -5,5 +5,7 @@ import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { Flip } from "gsap/Flip";
 
 export default defineNuxtPlugin(() => {
-  gsap.registerPlugin(ScrollTrigger, Observer, ScrollSmoother, Flip);
+  if (process.client) {
+    gsap.registerPlugin(ScrollTrigger, Observer, ScrollSmoother, Flip);
+  }
 });
