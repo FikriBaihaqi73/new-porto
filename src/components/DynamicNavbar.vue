@@ -685,21 +685,47 @@ onUnmounted(() => {
   }
   
   .dynamic-island.expanded {
-    width: max-content;
-    min-width: 90vw;
-    height: 110px;
+    width: calc(100vw - 40px); /* Adjust width to fit screen with some margin */
+    min-width: unset; /* Remove min-width constraint */
+    height: auto; /* Allow height to adjust based on content */
+    max-height: 80vh; /* Prevent it from taking too much height */
+    overflow-y: auto; /* Enable scroll if content overflows */
+    padding: 16px; /* Add some padding */
   }
   
   .island-text {
     font-size: 13px;
   }
   
+  .nav-header {
+    margin-bottom: 16px; /* Add margin below header */
+  }
+  
   .nav-title {
     font-size: 14px;
   }
   
+  .expanded-nav {
+    flex-direction: column; /* Stack items vertically */
+    gap: 10px; /* Adjust gap */
+    padding: 10px; /* Reduce padding */
+    align-items: flex-start; /* Align items to the start */
+  }
+  
+  .nav-items {
+    flex-direction: column; /* Stack nav items vertically */
+    gap: 8px; /* Reduce gap between nav items */
+    width: 100%; /* Take full width */
+    align-items: flex-start; /* Align items to the start */
+  }
+  
+  .nav-item {
+    width: 100%; /* Ensure nav items take full width */
+  }
+  
   .nav-link {
     padding: 8px 12px;
+    justify-content: flex-start; /* Align text to start */
   }
   
   .nav-text {
@@ -725,16 +751,17 @@ onUnmounted(() => {
 
 @media (max-width: 480px) {
   .dynamic-island.expanded {
-    width: 92vw;
-    height: 100px;
+    width: calc(100vw - 32px); /* Adjust width for smaller screens */
+    padding: 12px; /* Reduce padding */
   }
   
   .expanded-nav {
-    padding: 14px;
+    padding: 8px; /* Further reduce padding */
+    gap: 6px; /* Further reduce gap */
   }
   
   .nav-items {
-    gap: 8px;
+    gap: 6px;
   }
   
   .nav-link {
@@ -742,7 +769,7 @@ onUnmounted(() => {
   }
   
   .nav-text {
-    font-size: 11px;
+    font-size: 10px;
   }
 }
 </style>
