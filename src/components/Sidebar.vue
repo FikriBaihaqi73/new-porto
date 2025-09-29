@@ -23,6 +23,12 @@
           <i class="icon-[lucide--folder-git-2] w-5 h-5 mr-3"></i>
           Projects
         </NuxtLink>
+        <li class="mb-2">
+          <NuxtLink to="/admin/social-media-links" class="flex items-center text-teal-300 hover:text-teal-100 py-2 px-4 rounded-lg transition-colors duration-200 hover:bg-[#1f2937] shadow-blue-900/40 hover:shadow-teal-500/20">
+            <i class="icon-[lucide--share-2] w-5 h-5 mr-3"></i>
+            Social Media
+          </NuxtLink>
+        </li>
       </ul>
     </nav>
   </aside>
