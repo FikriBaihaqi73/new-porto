@@ -9,6 +9,10 @@ declare module 'h3' {
 
 export default defineEventHandler(async (event) => {
   const publicRouteRegexes = [
+    '/',
+    '/login',
+    '/admin',
+    '/admin/login',
     /^\/$/,
     /^\/projects(\/?)$/,
     /^\/projects\/[^/]+(\/?)$/,
@@ -19,7 +23,6 @@ export default defineEventHandler(async (event) => {
     /^\/api\/projects\/[^/]+(\/?)$/,
     /^\/api\/social-media-links(\/?)$/,
     /^\/api\/social-media-links\/[^/]+(\/?)$/,
-    /^\/login(\/?)$/,
   ];
 
   const isPublicRoute = publicRouteRegexes.some(regex => regex.test(event.path));
