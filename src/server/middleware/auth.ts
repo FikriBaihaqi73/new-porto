@@ -8,6 +8,7 @@ declare module 'h3' {
 }
 
 export default defineEventHandler(async (event) => {
+  console.log(`[Auth Middleware] Path: ${event.path}`);
   const publicRouteRegexes = [
     /^\/$/,
     /^\/login(\/)?$/,
@@ -25,6 +26,7 @@ export default defineEventHandler(async (event) => {
   ];
 
   const isPublicRoute = publicRouteRegexes.some(regex => regex.test(event.path));
+  console.log(`[Auth Middleware] Path: ${event.path}, isPublicRoute: ${isPublicRoute}`);
 
   if (isPublicRoute) {
     return;
