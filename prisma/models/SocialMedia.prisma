@@ -1,0 +1,8 @@
+model SocialMedia {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  url       String
+  svgPath   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

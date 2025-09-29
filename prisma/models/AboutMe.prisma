@@ -1,0 +1,13 @@
+model AboutMe {
+  id              String    @id @default(uuid())
+  name            String
+  profilePictureUrl String?
+  level           Int
+  details         Json      // Bidang fleksibel untuk role, race, class, guild, origin, alignment, dll.
+  description     String
+  stats           Json
+  skills          Json
+  tools           Json
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}

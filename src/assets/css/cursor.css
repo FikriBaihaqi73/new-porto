@@ -1,0 +1,136 @@
+/* Global Custom Cursor Styles for Portfolio */
+
+/* Base cursor for the entire site */
+* {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="%2360a5fa" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="2" fill="%2360a5fa"/></svg>'), auto !important;
+}
+
+/* Clickable elements - special pointer cursor */
+a, 
+button, 
+.cursor-pointer,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><polygon points="12,2 20,20 12,17 4,20" stroke="%2360a5fa" stroke-width="2" fill="%231e40af"/></svg>'), pointer !important;
+}
+
+/* Hover states for clickable elements */
+a:hover, 
+button:hover, 
+.cursor-pointer:hover,
+[role="button"]:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><polygon points="12,2 20,20 12,17 4,20" stroke="%2322d3ee" stroke-width="2" fill="%232563eb"/></svg>'), pointer !important;
+}
+
+/* Special cursors for different contexts */
+
+/* Dynamic Navbar - special navigation cursor */
+.dynamic-island {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="%2360a5fa" stroke-width="2" fill="none"/><path d="M8 12h8M12 8v8" stroke="%2360a5fa" stroke-width="2"/></svg>'), pointer !important;
+}
+
+.dynamic-island.expanded {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="%2322d3ee" stroke-width="2" fill="%231e40af" opacity="0.3"/><path d="M12 4V20M4 12H20" stroke="%2322d3ee" stroke-width="2"/></svg>'), default !important;
+}
+
+.nav-link:hover {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 12L13 16L21 8" stroke="%2322d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="10" stroke="%2360a5fa" stroke-width="1" fill="none"/></svg>'), pointer !important;
+}
+
+.close-btn:hover {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="%23ef4444" stroke-width="2" fill="none"/><path d="M15 9L9 15M9 9L15 15" stroke="%23ef4444" stroke-width="2"/></svg>'), pointer !important;
+}
+
+/* Back button - special return cursor */
+.back-button:hover {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M12 19L5 12L12 5" stroke="%2322d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'), pointer !important;
+}
+
+/* Project cards - special focus cursor */
+.side-project-card,
+.bg-gray-800:hover {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="3" y="3" width="20" height="20" rx="4" stroke="%2322d3ee" stroke-width="2" fill="%231e40af" opacity="0.3"/><circle cx="13" cy="13" r="4" fill="%2322d3ee"/></svg>'), pointer !important;
+}
+
+/* Main project display - target cursor */
+.main-project-display {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="4" width="20" height="20" rx="4" stroke="%2360a5fa" stroke-width="2" fill="none"/><circle cx="14" cy="14" r="4" fill="%2360a5fa"/><circle cx="14" cy="14" r="2" fill="%231e40af"/></svg>'), default !important;
+}
+
+.main-project-display:hover {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="4" width="20" height="20" rx="4" stroke="%2322d3ee" stroke-width="2" fill="none"/><circle cx="14" cy="14" r="4" fill="%2322d3ee"/><circle cx="14" cy="14" r="2" fill="%232563eb"/></svg>'), default !important;
+}
+
+/* Primary action buttons - diamond cursor */
+.bg-blue-600:hover,
+.bg-blue-500:hover {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L22 12L12 22L2 12L12 2Z" stroke="%2322d3ee" stroke-width="2" fill="%232563eb"/></svg>'), pointer !important;
+}
+
+/* Secondary buttons - outline cursor */
+.border-blue-500:hover,
+.border-blue-400:hover {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="%2322d3ee" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="%2322d3ee"/></svg>'), pointer !important;
+}
+
+/* Tech stack tags - label cursor */
+.bg-blue-700:hover {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="6" width="16" height="8" rx="2" stroke="%2322d3ee" stroke-width="1.5" fill="%232563eb"/></svg>'), pointer !important;
+}
+
+/* External links - special external cursor */
+a[target="_blank"]:hover {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7" stroke="%2322d3ee" stroke-width="2"/><path d="M7 7h10v10" stroke="%2322d3ee" stroke-width="2" fill="none"/></svg>'), pointer !important;
+}
+
+/* Form inputs - text cursor */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 4V20M8 8L12 4L16 8M8 16L12 20L16 16" stroke="%2360a5fa" stroke-width="2"/></svg>'), text !important;
+}
+
+/* Select dropdown - special dropdown cursor */
+select:hover {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="2" y="6" width="18" height="10" rx="2" stroke="%2322d3ee" stroke-width="1.5" fill="%231e40af"/><path d="M7 9L11 13L15 9" stroke="%2322d3ee" stroke-width="1.5"/></svg>'), pointer !important;
+}
+
+/* Pagination controls - navigation cursor */
+.w-10:hover,
+.pagination-btn:hover {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="%2322d3ee" stroke-width="2" fill="%232563eb"/><text x="10" y="15" font-family="monospace" font-size="10" fill="white" text-anchor="middle">→</text></svg>'), pointer !important;
+}
+
+/* Special cursors for different sections */
+
+/* Hero section - special intro cursor */
+#hero-section {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="10" stroke="%2360a5fa" stroke-width="2" fill="none"/><circle cx="13" cy="13" r="3" fill="%2360a5fa"/><path d="M13 3V7M13 19V23M3 13H7M19 13H23" stroke="%2360a5fa" stroke-width="1.5"/></svg>'), auto !important;
+}
+
+/* About section - info cursor */
+#about-section {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="%2360a5fa" stroke-width="2" fill="none"/><path d="M12 8V16M12 6H12.01" stroke="%2360a5fa" stroke-width="2"/></svg>'), auto !important;
+}
+
+/* Footer section - end cursor */
+#footer-section {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="%2360a5fa" stroke-width="2" fill="none"/><path d="M9 12L11 14L15 10" stroke="%2360a5fa" stroke-width="2"/></svg>'), auto !important;
+}
+
+/* Disable cursor on non-interactive elements */
+.no-cursor {
+  cursor: none !important;
+}
+
+/* Loading cursor for transitions */
+.loading-cursor {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="%2360a5fa" stroke-width="2" stroke-dasharray="50.27" stroke-dashoffset="25.13" fill="none"><animateTransform attributeName="transform" type="rotate" values="0 12 12;360 12 12" dur="1s" repeatCount="indefinite"/></circle></svg>'), wait !important;
+}
