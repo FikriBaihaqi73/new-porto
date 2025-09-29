@@ -8,7 +8,7 @@ export default defineNuxtConfig({
   serverDir: "src/server",
   css: ["~/assets/css/main.css"],
   nitro: {
-    preset: 'netlify',
+    preset: 'vercel',
   },
   app: {
     head: {

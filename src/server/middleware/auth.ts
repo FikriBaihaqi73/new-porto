@@ -8,24 +8,20 @@ declare module 'h3' {
 }
 
 export default defineEventHandler(async (event) => {
-  // Explicitly allow root path to bypass authentication
-  if (event.path === '/') {
-    return;
-  }
   const publicRouteRegexes = [
     /^\/$/,
-    /^\/login(\/?)$/,
-    /^\/admin(\/?)$/,
-    /^\/admin\/login(\/?)$/,
-    /^\/projects(\/?)$/,
-    /^\/projects\/[^/]+(\/?)$/,
-    /^\/api\/auth\/login(\/?)$/,
-    /^\/api\/about(\/?)$/,
-    /^\/api\/experience(\/?)$/,
+    /^\/login(\/)?$/,
+    /^\/admin(\/)?$/,
+    /^\/admin\/login(\/)?$/,
+    /^\/projects(\/)?$/,
+    /^\/projects\/[^/]+(\/)?$/,
+    /^\/api\/auth\/login(\/)?$/,
+    /^\/api\/about(\/)?$/,
+    /^\/api\/experience(\/)?$/,
     /^\/api\/projects(\/|\?.*)?$/,
-    /^\/api\/projects\/[^/]+(\/?)$/,
-    /^\/api\/social-media-links(\/?)$/,
-    /^\/api\/social-media-links\/[^/]+(\/?)$/,
+    /^\/api\/projects\/[^/]+(\/)?$/,
+    /^\/api\/social-media-links(\/)?$/,
+    /^\/api\/social-media-links\/[^/]+(\/)?$/,
   ];
 
   const isPublicRoute = publicRouteRegexes.some(regex => regex.test(event.path));
